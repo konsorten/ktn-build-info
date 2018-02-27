@@ -1,4 +1,4 @@
-package main
+package ver
 
 import (
 	"encoding/json"
@@ -10,7 +10,7 @@ import (
 )
 
 const (
-	packageJsonFilename = "package.json"
+	PackageJsonFilename = "package.json"
 )
 
 type packageJSON struct {
@@ -24,22 +24,22 @@ type packageJSON struct {
 	} `json:"author"`
 }
 
-func tryReadPackageJSON(c *cli.Context, vi *versionInformation) (bool, error) {
+func TryReadPackageJSON(c *cli.Context, vi *VersionInformation) (bool, error) {
 	// check if the file exists
-	if _, err := os.Stat(packageJsonFilename); err != nil {
-		log.Debugf("No %v found", packageJsonFilename)
+	if _, err := os.Stat(PackageJsonFilename); err != nil {
+		log.Debugf("No %v found", PackageJsonFilename)
 		return false, nil
 	}
 
 	// read the json
-	data, err := ioutil.ReadFile(packageJsonFilename)
+	data, err := ioutil.ReadFile(PackageJsonFilename)
 
 	if err != nil {
-		log.Errorf("Failed to read %v file: %v", packageJsonFilename, err)
+		log.Errorf("Failed to read %v file: %v", PackageJsonFilename, err)
 		return false, err
 	}
 
-	log.Debugf("Found version information: %v", packageJsonFilename)
+	log.Debugf("Found version information: %v", PackageJsonFilename)
 
 	// parse the package json file
 	pj := packageJSON{}
@@ -47,7 +47,7 @@ func tryReadPackageJSON(c *cli.Context, vi *versionInformation) (bool, error) {
 	err = json.Unmarshal(data, &pj)
 
 	if err != nil {
-		log.Errorf("Failed to parse %v file: %v", packageJsonFilename, err)
+		log.Errorf("Failed to parse %v file: %v", PackageJsonFilename, err)
 		return true, err
 	}
 

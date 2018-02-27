@@ -1,4 +1,4 @@
-package main
+package ver
 
 import (
 	"os"
@@ -16,16 +16,16 @@ func TestTryReadPackageJSON(t *testing.T) {
 	defer os.Chdir(currDir)
 
 	// read version information
-	vi := makeVersionInformation()
+	vi := MakeVersionInformation()
 
-	found, err := tryReadPackageJSON(nil, vi)
+	found, err := TryReadPackageJSON(nil, vi)
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
 	}
 
 	if !found {
-		t.Fatalf("%v not found", versionInfoYamlFilename)
+		t.Fatalf("%v not found", VersionInfoYamlFilename)
 	}
 
 	if !vi.IsValid() {

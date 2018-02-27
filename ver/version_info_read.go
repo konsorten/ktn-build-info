@@ -1,4 +1,4 @@
-package main
+package ver
 
 import (
 	"fmt"
@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	versionInfoYamlFilename = "version-info.yml"
+	VersionInfoYamlFilename = "version-info.yml"
 )
 
 type versionInfoYAML struct {
@@ -29,13 +29,13 @@ type versionInfoYAML struct {
 	} `yaml:"author"`
 }
 
-func tryReadVersionInfoYAML(c *cli.Context, vi *versionInformation) (bool, error) {
+func TryReadVersionInfoYAML(c *cli.Context, vi *VersionInformation) (bool, error) {
 	// gather version information
-	path := versionInfoYamlFilename
-	var found []*versionInformation
+	path := VersionInfoYamlFilename
+	var found []*VersionInformation
 
 	for {
-		vii := makeVersionInformation()
+		vii := MakeVersionInformation()
 
 		exists, err := tryReadVersionInfoYAMLInternal(c, vii, path)
 
@@ -49,7 +49,7 @@ func tryReadVersionInfoYAML(c *cli.Context, vi *versionInformation) (bool, error
 
 		log.Debugf("Found version information: %v", path)
 
-		found = append([]*versionInformation{vii}, found...)
+		found = append([]*VersionInformation{vii}, found...)
 		path = fmt.Sprintf("../%v", path)
 	}
 
@@ -66,7 +66,7 @@ func tryReadVersionInfoYAML(c *cli.Context, vi *versionInformation) (bool, error
 	return true, nil
 }
 
-func tryReadVersionInfoYAMLInternal(c *cli.Context, vi *versionInformation, filename string) (bool, error) {
+func tryReadVersionInfoYAMLInternal(c *cli.Context, vi *VersionInformation, filename string) (bool, error) {
 	// check if the file exists
 	if _, err := os.Stat(filename); err != nil {
 		log.Debugf("No %v found", filename)

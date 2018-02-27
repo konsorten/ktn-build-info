@@ -6,6 +6,7 @@ import (
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
+	"github.com/konsorten/ktn-build-info/ver"
 )
 
 func main() {
@@ -30,7 +31,7 @@ func main() {
     
     If available, it will read from existing files:
         * %v
-        * package.json (NPM)`, versionInfoYamlFilename)
+        * package.json (NPM)`, ver.VersionInfoYamlFilename)
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{

@@ -1,4 +1,4 @@
-package main
+package ver
 
 import (
 	"fmt"
@@ -9,7 +9,7 @@ import (
 	"github.com/blang/semver"
 )
 
-type versionInformation struct {
+type VersionInformation struct {
 	Author      string
 	Email       string
 	Website     string
@@ -27,10 +27,10 @@ type versionInformation struct {
 	BuildHost      string
 }
 
-func makeVersionInformation() *versionInformation {
+func MakeVersionInformation() *VersionInformation {
 	hostname, _ := os.Hostname()
 
-	return &versionInformation{
+	return &VersionInformation{
 		Major:          -1,
 		Minor:          -1,
 		Hotfix:         -1,
@@ -40,11 +40,11 @@ func makeVersionInformation() *versionInformation {
 	}
 }
 
-func (vi *versionInformation) String() string {
+func (vi *VersionInformation) String() string {
 	return vi.VersionTitle()
 }
 
-func (vi *versionInformation) IsValid() bool {
+func (vi *VersionInformation) IsValid() bool {
 	return vi.Author != "" &&
 		vi.Email != "" &&
 		vi.Website != "" &&
@@ -58,11 +58,11 @@ func (vi *versionInformation) IsValid() bool {
 		vi.BuildHost != ""
 }
 
-func (vi *versionInformation) VersionString() string {
+func (vi *VersionInformation) VersionString() string {
 	return fmt.Sprintf("%v.%v.%v.%v", vi.Major, vi.Minor, vi.Hotfix, vi.Build)
 }
 
-func (vi *versionInformation) VersionTitle() string {
+func (vi *VersionInformation) VersionTitle() string {
 	var b strings.Builder
 
 	b.WriteString(fmt.Sprintf("%v.%v.%v", vi.Major, vi.Minor, vi.Hotfix))
@@ -88,7 +88,7 @@ func (vi *versionInformation) VersionTitle() string {
 	return b.String()
 }
 
-func (vi *versionInformation) SemVerString() string {
+func (vi *VersionInformation) SemVerString() string {
 	var b strings.Builder
 
 	b.WriteString(fmt.Sprintf("%v.%v.%v", vi.Major, vi.Minor, vi.Hotfix))
@@ -114,7 +114,7 @@ func (vi *versionInformation) SemVerString() string {
 	return b.String()
 }
 
-func (vi *versionInformation) SetSemVersion(semVerString string) {
+func (vi *VersionInformation) SetSemVersion(semVerString string) {
 	ver := semver.MustParse(semVerString)
 
 	vi.Major = int(ver.Major)
@@ -122,7 +122,7 @@ func (vi *versionInformation) SetSemVersion(semVerString string) {
 	vi.Hotfix = int(ver.Patch)
 }
 
-func (vi *versionInformation) CopyMissingFrom(copy *versionInformation) {
+func (vi *VersionInformation) CopyMissingFrom(copy *VersionInformation) {
 	if vi.Author == "" && copy.Author != "" {
 		vi.Author = copy.Author
 	}

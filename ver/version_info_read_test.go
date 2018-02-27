@@ -1,4 +1,4 @@
-package main
+package ver
 
 import (
 	"os"
@@ -16,16 +16,16 @@ func TestTryReadVersionInfoYAML_simple(t *testing.T) {
 	defer os.Chdir(currDir)
 
 	// read version information
-	vi := makeVersionInformation()
+	vi := MakeVersionInformation()
 
-	found, err := tryReadVersionInfoYAML(nil, vi)
+	found, err := TryReadVersionInfoYAML(nil, vi)
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
 	}
 
 	if !found {
-		t.Fatalf("%v not found", versionInfoYamlFilename)
+		t.Fatalf("%v not found", VersionInfoYamlFilename)
 	}
 
 	if !vi.IsValid() {
@@ -42,16 +42,16 @@ func TestTryReadVersionInfoYAML_complex(t *testing.T) {
 	defer os.Chdir(currDir)
 
 	// read version information
-	vi := makeVersionInformation()
+	vi := MakeVersionInformation()
 
-	found, err := tryReadVersionInfoYAML(nil, vi)
+	found, err := TryReadVersionInfoYAML(nil, vi)
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
 	}
 
 	if !found {
-		t.Fatalf("%v not found", versionInfoYamlFilename)
+		t.Fatalf("%v not found", VersionInfoYamlFilename)
 	}
 
 	if !vi.IsValid() {
