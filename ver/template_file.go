@@ -76,6 +76,8 @@ func (vi *VersionInformation) WriteTemplateFile(templateFilePath string) error {
 			switch v := value.(type) {
 			case time.Month:
 				ret = strconv.Itoa(int(v))
+			default:
+				ret = fmt.Sprintf("%v", v)
 			}
 			return
 		},
