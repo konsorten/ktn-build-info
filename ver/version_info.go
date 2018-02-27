@@ -2,9 +2,7 @@ package ver
 
 import (
 	"fmt"
-	"os"
 	"strings"
-	"time"
 
 	"github.com/blang/semver"
 )
@@ -28,15 +26,11 @@ type VersionInformation struct {
 }
 
 func MakeVersionInformation() *VersionInformation {
-	hostname, _ := os.Hostname()
-
 	return &VersionInformation{
-		Major:          -1,
-		Minor:          -1,
-		Hotfix:         -1,
-		Build:          0,
-		BuildTimestamp: time.Now().Unix(),
-		BuildHost:      hostname,
+		Major:  -1,
+		Minor:  -1,
+		Hotfix: -1,
+		Build:  0,
 	}
 }
 

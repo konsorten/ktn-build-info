@@ -15,6 +15,13 @@ func TestTryReadPackageJSON(t *testing.T) {
 	os.Chdir("examples/npm")
 	defer os.Chdir(currDir)
 
+	// read host information
+	host, err := TryReadFromBuildHost()
+
+	if err != nil {
+		t.Fatalf("Failed to read build host info: %v", err)
+	}
+
 	// read version information
 	found, err := TryReadPackageJSON()
 
@@ -23,8 +30,10 @@ func TestTryReadPackageJSON(t *testing.T) {
 	}
 
 	if found == nil {
-		t.Fatalf("%v not found", VersionInfoYamlFilename)
+		t.Fatalf("%v not found", PackageJsonFilename)
 	}
+
+	found.CopyMissingFrom(host)
 
 	if !found.IsValid() {
 		t.Fatal("Invalid version information")
