@@ -12,7 +12,7 @@ const (
 	PackageJsonFilename = "package.json"
 )
 
-func TryReadPackageJSON() (*VersionInformation, error) {
+func TryReadFromPackageJSON() (*VersionInformation, error) {
 	// check if the file exists
 	if _, err := os.Stat(PackageJsonFilename); err != nil {
 		log.Debugf("No %v found", PackageJsonFilename)

@@ -51,6 +51,31 @@ func main() {
 		for _, i := range ver.AllInputs {
 			b.WriteString("  ")
 			b.WriteString(i.Name)
+
+			if i.Parameter != "" {
+				b.WriteString(" {")
+				b.WriteString(i.Parameter)
+				b.WriteString("}")
+			}
+
+			b.WriteString("\t")
+			b.WriteString(i.Description)
+			b.WriteString("\n")
+		}
+
+		// add outputs
+		b.WriteString("\nOUTPUTS:\n")
+
+		for _, i := range ver.AllOutputs {
+			b.WriteString("  ")
+			b.WriteString(i.Name)
+
+			if i.Parameter != "" {
+				b.WriteString(" {")
+				b.WriteString(i.Parameter)
+				b.WriteString("}")
+			}
+
 			b.WriteString("\t")
 			b.WriteString(i.Description)
 			b.WriteString("\n")
@@ -67,7 +92,7 @@ func main() {
 			b.WriteString("\n")
 		}
 
-		b.WriteString("\n  See for more details: https://golang.org/pkg/text/template/\n")
+		b.WriteString("\n  See for more details: https://golang.org/pkg/text/template/\n\n")
 
 		cli.AppHelpTemplate = b.String()
 	}
@@ -107,6 +132,5 @@ func run(c *cli.Context) error {
 	log.Debugf("Working directory: %v", dir)
 
 	// start scanning for version information
-
-	return nil
+	return ver.RunCurrentDirectory()
 }

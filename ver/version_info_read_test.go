@@ -23,7 +23,7 @@ func TestTryReadVersionInfoYAML_simple(t *testing.T) {
 	}
 
 	// read version information
-	found, err := TryReadVersionInfoYAML()
+	found, err := TryReadFromVersionInfoYAML()
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
@@ -35,7 +35,7 @@ func TestTryReadVersionInfoYAML_simple(t *testing.T) {
 
 	found.CopyMissingFrom(host)
 
-	if !found.IsValid() {
+	if ok, _ := found.IsValid(); !ok {
 		t.Fatal("Invalid version information")
 	}
 }
@@ -56,7 +56,7 @@ func TestTryReadVersionInfoYAML_complex(t *testing.T) {
 	}
 
 	// read version information
-	found, err := TryReadVersionInfoYAML()
+	found, err := TryReadFromVersionInfoYAML()
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
@@ -68,7 +68,7 @@ func TestTryReadVersionInfoYAML_complex(t *testing.T) {
 
 	found.CopyMissingFrom(host)
 
-	if !found.IsValid() {
+	if ok, _ := found.IsValid(); !ok {
 		t.Fatal("Invalid version information")
 	}
 }

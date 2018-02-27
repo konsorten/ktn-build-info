@@ -16,7 +16,7 @@
     "Revision": "{$.Revision$}",
 
     "BuildHost": "{$.BuildHost$}",
-    "BuildDateUnix": "{$.BuildDateUnix$}",
+    "BuildDateUnix": {$.BuildDateUnix$},
     "BuildDateISO": "{$.BuildDateISO$}",
     "BuildDate": {
         "Year": {$.BuildDate.Year$},

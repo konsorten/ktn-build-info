@@ -25,7 +25,7 @@ func TestRenderTemplateFile(t *testing.T) {
 	}
 
 	// read version information
-	found, err := TryReadVersionInfoYAML()
+	found, err := TryReadFromVersionInfoYAML()
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
@@ -39,7 +39,7 @@ func TestRenderTemplateFile(t *testing.T) {
 	found.Build = 4
 	found.Revision = "abcdef0"
 
-	if !found.IsValid() {
+	if ok, _ := found.IsValid(); !ok {
 		t.Fatal("Invalid version information")
 	}
 

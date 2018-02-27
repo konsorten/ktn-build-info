@@ -38,18 +38,65 @@ func (vi *VersionInformation) String() string {
 	return vi.VersionTitle()
 }
 
-func (vi *VersionInformation) IsValid() bool {
-	return vi.Author != "" &&
-		vi.Email != "" &&
-		vi.Website != "" &&
-		vi.Name != "" &&
-		vi.Description != "" &&
-		vi.Major >= 0 &&
-		vi.Minor >= 0 &&
-		vi.Hotfix >= 0 &&
-		vi.Build >= 0 &&
-		vi.BuildTimestamp > 0 &&
-		vi.BuildHost != ""
+func (vi *VersionInformation) IsValid() (ok bool, errors []string) {
+	ok = true
+
+	if vi.Author == "" {
+		ok = false
+		errors = append(errors, "Author is empty")
+	}
+
+	if vi.Email == "" {
+		ok = false
+		errors = append(errors, "E-mail is empty")
+	}
+
+	if vi.Website == "" {
+		ok = false
+		errors = append(errors, "Website is empty")
+	}
+
+	if vi.Name == "" {
+		ok = false
+		errors = append(errors, "Name is empty")
+	}
+
+	if vi.Description == "" {
+		ok = false
+		errors = append(errors, "Description is empty")
+	}
+
+	if vi.Major < 0 {
+		ok = false
+		errors = append(errors, "Major version < 0")
+	}
+
+	if vi.Minor < 0 {
+		ok = false
+		errors = append(errors, "Minor version < 0")
+	}
+
+	if vi.Hotfix < 0 {
+		ok = false
+		errors = append(errors, "Hotfix version < 0")
+	}
+
+	if vi.Build < 0 {
+		ok = false
+		errors = append(errors, "Build version < 0")
+	}
+
+	if vi.BuildTimestamp <= 0 {
+		ok = false
+		errors = append(errors, "Build timestamp is invalid")
+	}
+
+	if vi.BuildHost == "" {
+		ok = false
+		errors = append(errors, "Build Host is empty")
+	}
+
+	return
 }
 
 func (vi *VersionInformation) VersionString() string {

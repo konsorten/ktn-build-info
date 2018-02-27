@@ -28,7 +28,7 @@ type versionInfoYAML struct {
 	} `yaml:"author"`
 }
 
-func TryReadVersionInfoYAML() (*VersionInformation, error) {
+func TryReadFromVersionInfoYAML() (*VersionInformation, error) {
 	// gather version information
 	path := VersionInfoYamlFilename
 	var found []*VersionInformation

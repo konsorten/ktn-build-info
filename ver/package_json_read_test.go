@@ -23,7 +23,7 @@ func TestTryReadPackageJSON(t *testing.T) {
 	}
 
 	// read version information
-	found, err := TryReadPackageJSON()
+	found, err := TryReadFromPackageJSON()
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
@@ -35,7 +35,7 @@ func TestTryReadPackageJSON(t *testing.T) {
 
 	found.CopyMissingFrom(host)
 
-	if !found.IsValid() {
+	if ok, _ := found.IsValid(); !ok {
 		t.Fatal("Invalid version information")
 	}
 }
@@ -63,7 +63,7 @@ func TestTryReadPackageJSON_oldAuthor(t *testing.T) {
 	}
 
 	// read version information
-	found, err := TryReadPackageJSON()
+	found, err := TryReadFromPackageJSON()
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
@@ -76,7 +76,7 @@ func TestTryReadPackageJSON_oldAuthor(t *testing.T) {
 	found.CopyMissingFrom(host)
 	found.CopyMissingFrom(defaults)
 
-	if !found.IsValid() {
+	if ok, _ := found.IsValid(); !ok {
 		t.Fatal("Invalid version information")
 	}
 }
