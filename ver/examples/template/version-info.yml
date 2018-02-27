@@ -11,8 +11,11 @@ author:
 
 inputs:
   - build-host:
+  - teamcity:
+  - git:
   - version-info:
 
 outputs:
   - template: test.json.template
+  - teamcity:
 

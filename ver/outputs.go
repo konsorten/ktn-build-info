@@ -18,6 +18,13 @@ var AllOutputs = []OutputSpec{
 			return vi.WriteTemplateFile(param)
 		},
 	},
+	OutputSpec{
+		Name:        "teamcity",
+		Description: "Writes the version number back to TeamCity.",
+		Action: func(vi *VersionInformation, param string) error {
+			return vi.WriteToTeamCity()
+		},
+	},
 }
 
 func GetOutputSpec(name string) *OutputSpec {

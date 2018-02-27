@@ -44,7 +44,9 @@ func RunCurrentDirectory() error {
 			return fmt.Errorf("Failed to run input action %v: %v", i.Name, err)
 		}
 
-		result.CopyMissingFrom(vi)
+		if vi != nil {
+			result.CopyMissingFrom(vi)
+		}
 	}
 
 	// show information

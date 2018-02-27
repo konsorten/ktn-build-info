@@ -56,6 +56,10 @@ func TryReadFromTeamCity() (*VersionInformation, error) {
 }
 
 func (vi *VersionInformation) WriteToTeamCity() error {
+	if !IsTeamCityAvailable() {
+		return nil
+	}
+
 	// don't use logger, but write to console directly
 	fmt.Printf("##teamcity[buildNumber '%v']", vi.VersionString())
 
