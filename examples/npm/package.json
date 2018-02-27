@@ -1,0 +1,10 @@
+{
+  "name": "Example NPM Project",
+  "version": "1.2.3",
+  "description": "This is an NPM example.",
+  "author": {
+    "name": "marvin + konsorten GmbH",
+    "email": "open-source@konsorten.de",
+    "url": "http://www.konsorten.de"
+  }
+}
