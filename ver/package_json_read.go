@@ -16,11 +16,18 @@ type packageJSON struct {
 	Name        string `json:"name"`
 	Version     string `json:"version"`
 	Description string `json:"description"`
-	Author      struct {
+}
+
+type packageJSONAuthor struct {
+	Author struct {
 		Name    string `json:"name"`
 		Email   string `json:"email"`
 		Website string `json:"url"`
 	} `json:"author"`
+}
+
+type packageJSONAuthorOld struct {
+	Author string `json:"author"`
 }
 
 func TryReadPackageJSON() (*VersionInformation, error) {
@@ -53,12 +60,30 @@ func TryReadPackageJSON() (*VersionInformation, error) {
 	// copy data
 	vi := MakeVersionInformation()
 
-	vi.Author = pj.Author.Name
-	vi.Email = pj.Author.Email
-	vi.Website = pj.Author.Website
 	vi.Name = pj.Name
 	vi.Description = pj.Description
 	vi.SetSemVersion(pj.Version)
 
+	// parse the package json file for author
+	pja := packageJSONAuthor{}
+
+	err = json.Unmarshal(data, &pja)
+
+	if err == nil {
+		vi.Author = pja.Author.Name
+		vi.Email = pja.Author.Email
+		vi.Website = pja.Author.Website
+	} else {
+		// try old author type
+		pjo := packageJSONAuthorOld{}
+
+		err = json.Unmarshal(data, &pjo)
+
+		if err == nil {
+			vi.Author = pjo.Author
+		}
+	}
+
+	// done
 	return vi, nil
 }
