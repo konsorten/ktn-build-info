@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	log "github.com/Sirupsen/logrus"
 	"github.com/codegangsta/cli"
@@ -37,6 +38,39 @@ func main() {
 		ver.PackageJsonFilename,
 		ver.VersionInfoYamlFilename,
 	)
+
+	// generate app help templates
+	if true {
+		var b strings.Builder
+
+		b.WriteString(cli.AppHelpTemplate)
+
+		// add inputs
+		b.WriteString("\nINPUTS:\n")
+
+		for _, i := range ver.AllInputs {
+			b.WriteString("  ")
+			b.WriteString(i.Name)
+			b.WriteString("\t")
+			b.WriteString(i.Description)
+			b.WriteString("\n")
+		}
+
+		// add template file fields
+		b.WriteString("\nTEMPLATE FILE FIELDS:\n")
+
+		for n, d := range ver.GetTemplateFileFields() {
+			b.WriteString("  {{\"")
+			b.WriteString(fmt.Sprintf("%v.%v%v", ver.TemplateFileFieldPrefix, n, ver.TemplateFileFieldSuffix))
+			b.WriteString("\"}}\t")
+			b.WriteString(d)
+			b.WriteString("\n")
+		}
+
+		b.WriteString("\n  See for more details: https://golang.org/pkg/text/template/\n")
+
+		cli.AppHelpTemplate = b.String()
+	}
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{

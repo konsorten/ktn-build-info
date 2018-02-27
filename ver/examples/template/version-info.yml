@@ -1,0 +1,10 @@
+version: 1.2.3
+
+product:
+  name: Example App
+  desc: This is an exaple app.
+
+author:
+  name: marvin + konsorten GmbH
+  email: open-source@konsorten.de
+  url: http://www.konsorten.de

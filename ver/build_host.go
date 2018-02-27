@@ -17,7 +17,7 @@ func TryReadFromBuildHost() (*VersionInformation, error) {
 	vi := MakeVersionInformation()
 
 	vi.BuildHost = filepath.Base(cwd)
-	vi.BuildTimestamp = time.Now().Unix()
+	vi.BuildTimestamp = int(time.Now().Unix())
 
 	return vi, nil
 }

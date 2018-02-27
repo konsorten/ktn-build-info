@@ -21,7 +21,7 @@ type VersionInformation struct {
 
 	Revision string
 
-	BuildTimestamp int64
+	BuildTimestamp int
 	BuildHost      string
 }
 
@@ -83,13 +83,9 @@ func (vi *VersionInformation) VersionTitle() string {
 }
 
 func (vi *VersionInformation) SemVerString() string {
-	var b strings.Builder
-
-	b.WriteString(fmt.Sprintf("%v.%v.%v", vi.Major, vi.Minor, vi.Hotfix))
+	parts := []string{fmt.Sprintf("%v.%v.%v", vi.Major, vi.Minor, vi.Hotfix)}
 
 	// add additional parts
-	var parts []string
-
 	if vi.Build > 0 {
 		parts = append(parts, fmt.Sprintf("build+%v", vi.Build))
 	}
@@ -98,14 +94,7 @@ func (vi *VersionInformation) SemVerString() string {
 		parts = append(parts, fmt.Sprintf("rev.%v", vi.Revision))
 	}
 
-	// append parts
-	if len(parts) > 0 {
-		b.WriteString(" (")
-		b.WriteString(strings.Join(parts, ", "))
-		b.WriteString(")")
-	}
-
-	return b.String()
+	return strings.Join(parts, "-")
 }
 
 func (vi *VersionInformation) SetSemVersion(semVerString string) {

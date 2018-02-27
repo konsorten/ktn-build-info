@@ -1,0 +1,26 @@
+{
+    "Author": "{$.Author$}",
+    "Website": "{$.Website$}",
+    "Email": "{$.Email$}",
+
+    "Version": "{$.Version$}",
+    "VersionTitle": "{$.VersionTitle$}",
+    "VersionParts": {
+        "Major": {$index .VersionParts 0$},
+        "Minor": {$index .VersionParts 1$},
+        "Hotfix": {$index .VersionParts 2$},
+        "Build": {$index .VersionParts 3$}
+    },
+    "SemVer": "{$.SemVer$}",
+
+    "Revision": "{$.Revision$}",
+
+    "BuildHost": "{$.BuildHost$}",
+    "BuildDateUnix": "{$.BuildDateUnix$}",
+    "BuildDateISO": "{$.BuildDateISO$}",
+    "BuildDate": {
+        "Year": {$.BuildDate.Year$},
+        "Month": {$.BuildDate.Month | asInt$},
+        "Day": {$.BuildDate.Day$}
+    }
+}
