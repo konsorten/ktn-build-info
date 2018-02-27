@@ -16,19 +16,17 @@ func TestTryReadVersionInfoYAML_simple(t *testing.T) {
 	defer os.Chdir(currDir)
 
 	// read version information
-	vi := MakeVersionInformation()
-
-	found, err := TryReadVersionInfoYAML(nil, vi)
+	found, err := TryReadVersionInfoYAML()
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
 	}
 
-	if !found {
+	if found == nil {
 		t.Fatalf("%v not found", VersionInfoYamlFilename)
 	}
 
-	if !vi.IsValid() {
+	if !found.IsValid() {
 		t.Fatal("Invalid version information")
 	}
 }
@@ -42,19 +40,17 @@ func TestTryReadVersionInfoYAML_complex(t *testing.T) {
 	defer os.Chdir(currDir)
 
 	// read version information
-	vi := MakeVersionInformation()
-
-	found, err := TryReadVersionInfoYAML(nil, vi)
+	found, err := TryReadVersionInfoYAML()
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
 	}
 
-	if !found {
+	if found == nil {
 		t.Fatalf("%v not found", VersionInfoYamlFilename)
 	}
 
-	if !vi.IsValid() {
+	if !found.IsValid() {
 		t.Fatal("Invalid version information")
 	}
 }

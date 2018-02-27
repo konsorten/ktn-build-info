@@ -16,19 +16,17 @@ func TestTryReadPackageJSON(t *testing.T) {
 	defer os.Chdir(currDir)
 
 	// read version information
-	vi := MakeVersionInformation()
-
-	found, err := TryReadPackageJSON(nil, vi)
+	found, err := TryReadPackageJSON()
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
 	}
 
-	if !found {
+	if found == nil {
 		t.Fatalf("%v not found", VersionInfoYamlFilename)
 	}
 
-	if !vi.IsValid() {
+	if !found.IsValid() {
 		t.Fatal("Invalid version information")
 	}
 }

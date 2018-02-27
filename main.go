@@ -20,18 +20,23 @@ func main() {
 	app.Author = "marvin + konsorten GmbH"
 	app.Version = "0.1.0"
 	app.HideHelp = true
-	app.Usage = fmt.Sprintf(`Build Information Tool
+	app.Usage = fmt.Sprintf(
+		`Build Information Tool
 
-    This tool creates build version information files
-    based on the available information and writes
-    them to different file formats.
+		This tool creates build version information files
+		based on the available information and writes
+		them to different file formats.
+		
+		If available, it will read from existing files:
+			* %v
+			* %v (NPM)
 
-    It looks for the version-info.yml file in
-    the specified and parent directories.
-    
-    If available, it will read from existing files:
-        * %v
-        * package.json (NPM)`, ver.VersionInfoYamlFilename)
+		It looks for the %v file in the specified
+		and parent directories.`,
+		ver.VersionInfoYamlFilename,
+		ver.PackageJsonFilename,
+		ver.VersionInfoYamlFilename,
+	)
 
 	app.Flags = []cli.Flag{
 		cli.StringFlag{

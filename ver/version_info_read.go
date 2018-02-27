@@ -6,7 +6,6 @@ import (
 	"os"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/codegangsta/cli"
 	yaml "gopkg.in/yaml.v2"
 )
 
@@ -29,21 +28,19 @@ type versionInfoYAML struct {
 	} `yaml:"author"`
 }
 
-func TryReadVersionInfoYAML(c *cli.Context, vi *VersionInformation) (bool, error) {
+func TryReadVersionInfoYAML() (*VersionInformation, error) {
 	// gather version information
 	path := VersionInfoYamlFilename
 	var found []*VersionInformation
 
 	for {
-		vii := MakeVersionInformation()
-
-		exists, err := tryReadVersionInfoYAMLInternal(c, vii, path)
+		vii, err := tryReadVersionInfoYAMLInternal(path)
 
 		if err != nil {
-			return exists, err
+			return nil, err
 		}
 
-		if !exists {
+		if vii == nil {
 			break
 		}
 
@@ -55,22 +52,24 @@ func TryReadVersionInfoYAML(c *cli.Context, vi *VersionInformation) (bool, error
 
 	// nothing found?
 	if len(found) <= 0 {
-		return false, nil
+		return nil, nil
 	}
 
 	// merge the results
+	vi := MakeVersionInformation()
+
 	for _, vii := range found {
 		vi.CopyMissingFrom(vii)
 	}
 
-	return true, nil
+	return vi, nil
 }
 
-func tryReadVersionInfoYAMLInternal(c *cli.Context, vi *VersionInformation, filename string) (bool, error) {
+func tryReadVersionInfoYAMLInternal(filename string) (*VersionInformation, error) {
 	// check if the file exists
 	if _, err := os.Stat(filename); err != nil {
 		log.Debugf("No %v found", filename)
-		return false, nil
+		return nil, nil
 	}
 
 	// read the file
@@ -78,7 +77,7 @@ func tryReadVersionInfoYAMLInternal(c *cli.Context, vi *VersionInformation, file
 
 	if err != nil {
 		log.Errorf("Failed to read %v file: %v", filename, err)
-		return false, err
+		return nil, err
 	}
 
 	// parse the file
@@ -88,10 +87,12 @@ func tryReadVersionInfoYAMLInternal(c *cli.Context, vi *VersionInformation, file
 
 	if err != nil {
 		log.Errorf("Failed to parse %v file: %v", filename, err)
-		return true, err
+		return nil, err
 	}
 
 	// copy data
+	vi := MakeVersionInformation()
+
 	if viy.Version != "" {
 		vi.SetSemVersion(viy.Version)
 	}
@@ -102,5 +103,5 @@ func tryReadVersionInfoYAMLInternal(c *cli.Context, vi *VersionInformation, file
 	vi.Name = viy.Product.Name
 	vi.Description = viy.Product.Description
 
-	return true, nil
+	return vi, nil
 }

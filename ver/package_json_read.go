@@ -6,7 +6,6 @@ import (
 	"os"
 
 	log "github.com/Sirupsen/logrus"
-	"github.com/codegangsta/cli"
 )
 
 const (
@@ -24,11 +23,11 @@ type packageJSON struct {
 	} `json:"author"`
 }
 
-func TryReadPackageJSON(c *cli.Context, vi *VersionInformation) (bool, error) {
+func TryReadPackageJSON() (*VersionInformation, error) {
 	// check if the file exists
 	if _, err := os.Stat(PackageJsonFilename); err != nil {
 		log.Debugf("No %v found", PackageJsonFilename)
-		return false, nil
+		return nil, nil
 	}
 
 	// read the json
@@ -36,7 +35,7 @@ func TryReadPackageJSON(c *cli.Context, vi *VersionInformation) (bool, error) {
 
 	if err != nil {
 		log.Errorf("Failed to read %v file: %v", PackageJsonFilename, err)
-		return false, err
+		return nil, err
 	}
 
 	log.Debugf("Found version information: %v", PackageJsonFilename)
@@ -48,10 +47,12 @@ func TryReadPackageJSON(c *cli.Context, vi *VersionInformation) (bool, error) {
 
 	if err != nil {
 		log.Errorf("Failed to parse %v file: %v", PackageJsonFilename, err)
-		return true, err
+		return nil, err
 	}
 
 	// copy data
+	vi := MakeVersionInformation()
+
 	vi.Author = pj.Author.Name
 	vi.Email = pj.Author.Email
 	vi.Website = pj.Author.Website
@@ -59,5 +60,5 @@ func TryReadPackageJSON(c *cli.Context, vi *VersionInformation) (bool, error) {
 	vi.Description = pj.Description
 	vi.SetSemVersion(pj.Version)
 
-	return true, nil
+	return vi, nil
 }
