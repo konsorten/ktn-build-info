@@ -1,34 +1,16 @@
 package ver
 
 import (
-	"encoding/json"
 	"io/ioutil"
 	"os"
 
+	"github.com/Jeffail/gabs"
 	log "github.com/Sirupsen/logrus"
 )
 
 const (
 	PackageJsonFilename = "package.json"
 )
-
-type packageJSON struct {
-	Name        string `json:"name"`
-	Version     string `json:"version"`
-	Description string `json:"description"`
-}
-
-type packageJSONAuthor struct {
-	Author struct {
-		Name    string `json:"name"`
-		Email   string `json:"email"`
-		Website string `json:"url"`
-	} `json:"author"`
-}
-
-type packageJSONAuthorOld struct {
-	Author string `json:"author"`
-}
 
 func TryReadPackageJSON() (*VersionInformation, error) {
 	// check if the file exists
@@ -48,9 +30,7 @@ func TryReadPackageJSON() (*VersionInformation, error) {
 	log.Debugf("Found version information: %v", PackageJsonFilename)
 
 	// parse the package json file
-	pj := packageJSON{}
-
-	err = json.Unmarshal(data, &pj)
+	json, err := gabs.ParseJSON(data)
 
 	if err != nil {
 		log.Errorf("Failed to parse %v file: %v", PackageJsonFilename, err)
@@ -60,27 +40,35 @@ func TryReadPackageJSON() (*VersionInformation, error) {
 	// copy data
 	vi := MakeVersionInformation()
 
-	vi.Name = pj.Name
-	vi.Description = pj.Description
-	vi.SetSemVersion(pj.Version)
+	if c := json.Path("name"); c != nil {
+		vi.Name = c.Data().(string)
+	}
 
-	// parse the package json file for author
-	pja := packageJSONAuthor{}
+	if c := json.Path("version"); c != nil {
+		vi.SetSemVersion(c.Data().(string))
+	}
 
-	err = json.Unmarshal(data, &pja)
+	if c := json.Path("description"); c != nil {
+		vi.Description = c.Data().(string)
+	}
 
-	if err == nil {
-		vi.Author = pja.Author.Name
-		vi.Email = pja.Author.Email
-		vi.Website = pja.Author.Website
+	// parse author information
+	if json.Exists("author", "name") {
+		if c := json.Path("author.name"); c != nil {
+			vi.Author = c.Data().(string)
+		}
+
+		if c := json.Path("author.email"); c != nil {
+			vi.Email = c.Data().(string)
+		}
+
+		if c := json.Path("author.url"); c != nil {
+			vi.Website = c.Data().(string)
+		}
 	} else {
-		// try old author type
-		pjo := packageJSONAuthorOld{}
-
-		err = json.Unmarshal(data, &pjo)
-
-		if err == nil {
-			vi.Author = pjo.Author
+		// parse old author info
+		if c := json.Path("author"); c != nil {
+			vi.Author = c.Data().(string)
 		}
 	}
 
