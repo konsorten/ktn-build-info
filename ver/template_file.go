@@ -3,7 +3,9 @@ package ver
 import (
 	"bytes"
 	"fmt"
+	"html"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"path/filepath"
 	"reflect"
@@ -49,9 +51,7 @@ func GetTemplateFileFields() map[string]string {
 	return m
 }
 
-func (vi *VersionInformation) WriteTemplateFile(templateFilePath string) error {
-	log.Debugf("Rendering template: %v", templateFilePath)
-
+func RenderTemplate(templateContent string, templateName string, vi *VersionInformation) (string, error) {
 	// build data object
 	timestamp := time.Unix(int64(vi.BuildTimestamp), 0).UTC()
 
@@ -81,21 +81,69 @@ func (vi *VersionInformation) WriteTemplateFile(templateFilePath string) error {
 			}
 			return
 		},
+		"encodeHtml": func(value interface{}) (ret string) {
+			switch v := value.(type) {
+			case string:
+				ret = html.EscapeString(v)
+			default:
+				ret = html.EscapeString(fmt.Sprintf("%v", v))
+			}
+			return
+		},
+		"encodeXml": func(value interface{}) (ret string) {
+			switch v := value.(type) {
+			case string:
+				ret = html.EscapeString(v)
+			default:
+				ret = html.EscapeString(fmt.Sprintf("%v", v))
+			}
+			return
+		},
+		"encodeUrl": func(value interface{}) (ret string) {
+			switch v := value.(type) {
+			case string:
+				ret = url.QueryEscape(v)
+			default:
+				ret = url.QueryEscape(fmt.Sprintf("%v", v))
+			}
+			return
+		},
 	}
 
 	// parse the template
-	filename := filepath.Base(templateFilePath)
-
-	templ, err := template.New(filename).Delims(TemplateFileFieldPrefix, TemplateFileFieldSuffix).Funcs(templateFuncs).ParseFiles(templateFilePath)
+	templ, err := template.New(templateName).Delims(TemplateFileFieldPrefix, TemplateFileFieldSuffix).Funcs(templateFuncs).Parse(templateContent)
 
 	if err != nil {
-		return err
+		return "", err
 	}
 
 	// render template
 	b := bytes.NewBufferString("")
 
-	err = templ.ExecuteTemplate(b, filename, &data)
+	err = templ.ExecuteTemplate(b, templateName, &data)
+
+	if err != nil {
+		return "", err
+	}
+
+	// done
+	return b.String(), nil
+}
+
+func (vi *VersionInformation) WriteTemplateFile(templateFilePath string) error {
+	log.Debugf("Rendering template: %v", templateFilePath)
+
+	// read the template
+	tc, err := ioutil.ReadFile(templateFilePath)
+
+	if err != nil {
+		return err
+	}
+
+	// render the template
+	filename := filepath.Base(templateFilePath)
+
+	result, err := RenderTemplate(string(tc), filename, vi)
 
 	if err != nil {
 		return err
@@ -117,5 +165,5 @@ func (vi *VersionInformation) WriteTemplateFile(templateFilePath string) error {
 	// write the file
 	outputPath := filepath.Join(filepath.Dir(templateFilePath), outputFilename)
 
-	return ioutil.WriteFile(outputPath, b.Bytes(), os.FileMode(644))
+	return ioutil.WriteFile(outputPath, []byte(result), os.FileMode(644))
 }
