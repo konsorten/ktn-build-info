@@ -22,5 +22,8 @@
         "Year": {$.BuildDate.Year$},
         "Month": {$.BuildDate.Month | asInt$},
         "Day": {$.BuildDate.Day$}
+    },
+    "UpdateJsonTestDelete": {
+        "del": true
     }
 }

@@ -2,6 +2,7 @@ package ver
 
 import (
 	"fmt"
+	"strings"
 )
 
 type OutputAction = func(vi *VersionInformation, params map[string]string) error
@@ -28,6 +29,35 @@ var AllOutputs = []OutputSpec{
 			}
 
 			return vi.WriteTemplateFile(f)
+		},
+	},
+	OutputSpec{
+		Name:        "update-json",
+		Description: "Updates an existing JSON document.",
+		Parameters: []string{
+			"file:{path}\tPath to the JSON file.",
+			"indent:{chars}\tCharacters to use for indent, like four space characters.",
+			"!{path}:{value}\tSet the value at {path} to {value}. All template file fields are supported. Strings have to be quoted, e.g. '\"{$.Author$}\"'",
+			"!{path}:$null$\tSets the value at {path} to null.",
+			"!{path}:$delete$\tDeletes the value at {path}.",
+		},
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			f := params["file"]
+
+			if f == "" {
+				return fmt.Errorf("No JSON file specified; missing 'file' parameter")
+			}
+
+			// gather actions
+			actions := make(map[string]string)
+
+			for k, v := range params {
+				if strings.HasPrefix(k, "!") {
+					actions[k[1:]] = v
+				}
+			}
+
+			return UpdateJsonFile(f, actions, vi, params["indent"])
 		},
 	},
 	OutputSpec{

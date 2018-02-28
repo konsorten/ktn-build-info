@@ -72,12 +72,29 @@ func RenderTemplate(templateContent string, templateName string, vi *VersionInfo
 
 	// template functions
 	templateFuncs := template.FuncMap{
-		"asInt": func(value interface{}) (ret string) {
+		"asInt": func(value interface{}) (ret int) {
 			switch v := value.(type) {
 			case time.Month:
-				ret = strconv.Itoa(int(v))
+				ret = int(v)
+			case string:
+				ret, _ = strconv.Atoi(v)
 			default:
-				ret = fmt.Sprintf("%v", v)
+				ret, _ = strconv.Atoi(fmt.Sprintf("%v", v))
+			}
+			return
+		},
+		"asBool": func(value interface{}) (ret bool) {
+			switch v := value.(type) {
+			case int:
+				ret = v != 0
+			case float32:
+				ret = v != 0
+			case float64:
+				ret = v != 0
+			case string:
+				ret, _ = strconv.ParseBool(v)
+			default:
+				ret, _ = strconv.ParseBool(fmt.Sprintf("%v", v))
 			}
 			return
 		},
