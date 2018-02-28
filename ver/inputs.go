@@ -51,9 +51,16 @@ var AllInputs = []InputSpec{
 	},
 	InputSpec{
 		Name:        "teamcity",
-		Description: "Read version and revision information from TeamCity environment variables.",
+		Description: "Read project name, version, and revision information from TeamCity environment variables.",
 		Action: func(param string) (*VersionInformation, error) {
 			return TryReadFromTeamCity()
+		},
+	},
+	InputSpec{
+		Name:        "gitlab-ci",
+		Description: "Read project name and revision information from GitLab CI environment variables.",
+		Action: func(param string) (*VersionInformation, error) {
+			return TryReadFromGitlabCI()
 		},
 	},
 	InputSpec{

@@ -52,6 +52,17 @@ func TryReadFromTeamCity() (*VersionInformation, error) {
 		}
 	}
 
+	// read project name
+	if vi.Name == "" {
+		bn := os.Getenv("TEAMCITY_PROJECT_NAME")
+
+		if bn != "" {
+			vi.Name = bn
+
+			log.Debugf("Found TeamCity project name: %v", vi.Name)
+		}
+	}
+
 	return vi, nil
 }
 
