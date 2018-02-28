@@ -12,7 +12,7 @@ const (
 	PackageJsonFilename = "package.json"
 )
 
-func TryReadFromPackageJSON() (*VersionInformation, error) {
+func TryReadFromPackageJSON(ignoreName bool, ignoreVersion bool, ignoreDescription bool, ignoreAuthor bool) (*VersionInformation, error) {
 	// check if the file exists
 	if _, err := os.Stat(PackageJsonFilename); err != nil {
 		log.Debugf("No %v found", PackageJsonFilename)
@@ -40,35 +40,37 @@ func TryReadFromPackageJSON() (*VersionInformation, error) {
 	// copy data
 	vi := MakeVersionInformation()
 
-	if c := json.Path("name"); c != nil {
+	if c := json.Path("name"); !ignoreName && c != nil {
 		vi.Name = c.Data().(string)
 	}
 
-	if c := json.Path("version"); c != nil {
+	if c := json.Path("version"); !ignoreVersion && c != nil {
 		vi.SetSemVersion(c.Data().(string))
 	}
 
-	if c := json.Path("description"); c != nil {
+	if c := json.Path("description"); !ignoreDescription && c != nil {
 		vi.Description = c.Data().(string)
 	}
 
 	// parse author information
-	if json.Exists("author", "name") {
-		if c := json.Path("author.name"); c != nil {
-			vi.Author = c.Data().(string)
-		}
+	if !ignoreAuthor {
+		if json.Exists("author", "name") {
+			if c := json.Path("author.name"); c != nil {
+				vi.Author = c.Data().(string)
+			}
 
-		if c := json.Path("author.email"); c != nil {
-			vi.Email = c.Data().(string)
-		}
+			if c := json.Path("author.email"); c != nil {
+				vi.Email = c.Data().(string)
+			}
 
-		if c := json.Path("author.url"); c != nil {
-			vi.Website = c.Data().(string)
-		}
-	} else {
-		// parse old author info
-		if c := json.Path("author"); c != nil {
-			vi.Author = c.Data().(string)
+			if c := json.Path("author.url"); c != nil {
+				vi.Website = c.Data().(string)
+			}
+		} else {
+			// parse old author info
+			if c := json.Path("author"); c != nil {
+				vi.Author = c.Data().(string)
+			}
 		}
 	}
 

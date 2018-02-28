@@ -23,7 +23,7 @@ func TestTryReadPackageJSON(t *testing.T) {
 	}
 
 	// read version information
-	found, err := TryReadFromPackageJSON()
+	found, err := TryReadFromPackageJSON(false, false, false, false)
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
@@ -63,7 +63,7 @@ func TestTryReadPackageJSON_oldAuthor(t *testing.T) {
 	}
 
 	// read version information
-	found, err := TryReadFromPackageJSON()
+	found, err := TryReadFromPackageJSON(false, false, false, false)
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)

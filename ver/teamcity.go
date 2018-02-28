@@ -12,7 +12,7 @@ func IsTeamCityAvailable() bool {
 	return os.Getenv("TEAMCITY_VERSION") != ""
 }
 
-func TryReadFromTeamCity() (*VersionInformation, error) {
+func TryReadFromTeamCity(ignoreBuildNumber bool, ignoreRevision bool, ignoreName bool) (*VersionInformation, error) {
 	if !IsTeamCityAvailable() {
 		return nil, nil
 	}
@@ -20,7 +20,7 @@ func TryReadFromTeamCity() (*VersionInformation, error) {
 	vi := MakeVersionInformation()
 
 	// read build number (from meta project)
-	if vi.Build <= 0 {
+	if !ignoreBuildNumber && vi.Build <= 0 {
 		bn := os.Getenv("BUILDMETA_BUILD_NUMBER")
 
 		if bn != "" {
@@ -31,7 +31,7 @@ func TryReadFromTeamCity() (*VersionInformation, error) {
 	}
 
 	// read build number
-	if vi.Build <= 0 {
+	if !ignoreBuildNumber && vi.Build <= 0 {
 		bn := os.Getenv("BUILD_NUMBER")
 
 		if bn != "" {
@@ -42,7 +42,7 @@ func TryReadFromTeamCity() (*VersionInformation, error) {
 	}
 
 	// read revision
-	if vi.Revision == "" {
+	if !ignoreRevision && vi.Revision == "" {
 		bn := os.Getenv("BUILD_VCS_NUMBER")
 
 		if bn != "" {
@@ -53,7 +53,7 @@ func TryReadFromTeamCity() (*VersionInformation, error) {
 	}
 
 	// read project name
-	if vi.Name == "" {
+	if !ignoreName && vi.Name == "" {
 		bn := os.Getenv("TEAMCITY_PROJECT_NAME")
 
 		if bn != "" {

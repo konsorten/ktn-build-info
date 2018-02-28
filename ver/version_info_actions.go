@@ -1,6 +1,7 @@
 package ver
 
 import (
+	"fmt"
 	"io/ioutil"
 	"os"
 
@@ -14,8 +15,8 @@ type versionInfoActionsYAML struct {
 }
 
 type VersionInfoAction struct {
-	Name      string
-	Parameter string
+	Name       string
+	Parameters map[string]string
 }
 
 type VersionInfoActions struct {
@@ -52,21 +53,47 @@ func ReadVersionInfoActions() (*VersionInfoActions, error) {
 	var ret VersionInfoActions
 
 	for _, i := range viy.Inputs {
-		for n, p := range i {
-			ret.Inputs = append(ret.Inputs, VersionInfoAction{
-				Name:      n,
-				Parameter: p,
-			})
+		action := VersionInfoAction{
+			Parameters: make(map[string]string),
 		}
+
+		for n, p := range i {
+			if n == "action" {
+				action.Name = p
+			} else {
+				action.Parameters[n] = p
+			}
+		}
+
+		// is action valid?
+		if action.Name == "" {
+			return nil, fmt.Errorf("Failed to get action name; missing 'action' property: %v", i)
+		}
+
+		// done
+		ret.Inputs = append(ret.Inputs, action)
 	}
 
 	for _, o := range viy.Outputs {
-		for n, p := range o {
-			ret.Outputs = append(ret.Outputs, VersionInfoAction{
-				Name:      n,
-				Parameter: p,
-			})
+		action := VersionInfoAction{
+			Parameters: make(map[string]string),
 		}
+
+		for n, p := range o {
+			if n == "action" {
+				action.Name = p
+			} else {
+				action.Parameters[n] = p
+			}
+		}
+
+		// is action valid?
+		if action.Name == "" {
+			return nil, fmt.Errorf("Failed to get action name; missing 'action' property: %v", o)
+		}
+
+		// done
+		ret.Outputs = append(ret.Outputs, action)
 	}
 
 	return &ret, nil

@@ -28,7 +28,7 @@ func RunCurrentDirectory() error {
 	result := MakeVersionInformation()
 
 	for _, i := range actions.Inputs {
-		log.Debugf("Processing input: %v [%v]", i.Name, i.Parameter)
+		log.Debugf("Processing input: %v [%v]", i.Name, i.Parameters)
 
 		// resolve spec
 		spec := GetInputSpec(i.Name)
@@ -38,7 +38,7 @@ func RunCurrentDirectory() error {
 		}
 
 		// run the action
-		vi, err := spec.Action(i.Parameter)
+		vi, err := spec.Action(i.Parameters)
 
 		if err != nil {
 			return fmt.Errorf("Failed to run input action %v: %v", i.Name, err)
@@ -59,7 +59,7 @@ func RunCurrentDirectory() error {
 
 	// processing outputs
 	for _, o := range actions.Outputs {
-		log.Debugf("Processing output: %v [%v]", o.Name, o.Parameter)
+		log.Debugf("Processing output: %v [%v]", o.Name, o.Parameters)
 
 		// resolve spec
 		spec := GetOutputSpec(o.Name)
@@ -69,10 +69,10 @@ func RunCurrentDirectory() error {
 		}
 
 		// run the action
-		err := spec.Action(result, o.Parameter)
+		err := spec.Action(result, o.Parameters)
 
 		if err != nil {
-			return fmt.Errorf("Failed to run output action %v [%v]: %v", o.Name, o.Parameter, err)
+			return fmt.Errorf("Failed to run output action %v [%v]: %v", o.Name, o.Parameters, err)
 		}
 	}
 

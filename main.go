@@ -51,34 +51,36 @@ func main() {
 		for _, i := range ver.AllInputs {
 			b.WriteString("  ")
 			b.WriteString(i.Name)
-
-			if i.Parameter != "" {
-				b.WriteString(" {")
-				b.WriteString(i.Parameter)
-				b.WriteString("}")
-			}
-
 			b.WriteString("\t")
 			b.WriteString(i.Description)
 			b.WriteString("\n")
+
+			if i.Parameters != nil {
+				for _, p := range i.Parameters {
+					b.WriteString("    ")
+					b.WriteString(p)
+					b.WriteString("\n")
+				}
+			}
 		}
 
 		// add outputs
 		b.WriteString("\nOUTPUTS:\n")
 
-		for _, i := range ver.AllOutputs {
+		for _, o := range ver.AllOutputs {
 			b.WriteString("  ")
-			b.WriteString(i.Name)
-
-			if i.Parameter != "" {
-				b.WriteString(" {")
-				b.WriteString(i.Parameter)
-				b.WriteString("}")
-			}
-
+			b.WriteString(o.Name)
 			b.WriteString("\t")
-			b.WriteString(i.Description)
+			b.WriteString(o.Description)
 			b.WriteString("\n")
+
+			if o.Parameters != nil {
+				for _, p := range o.Parameters {
+					b.WriteString("    ")
+					b.WriteString(p)
+					b.WriteString("\n")
+				}
+			}
 		}
 
 		// add template file fields

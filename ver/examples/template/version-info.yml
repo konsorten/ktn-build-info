@@ -10,12 +10,13 @@ author:
   url: http://www.konsorten.de
 
 inputs:
-  - build-host:
-  - teamcity:
-  - git:
-  - version-info:
+  - action: build-host
+  - action: teamcity
+    name: false
+  - action: git
+  - action: version-info
 
 outputs:
-  - template: test.json.template
-  - teamcity:
-
+  - action: template
+    file: test.json.template
+  - action: teamcity

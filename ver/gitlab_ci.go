@@ -10,7 +10,7 @@ func IsGitlabCIAvailable() bool {
 	return os.Getenv("GITLAB_CI") == "true"
 }
 
-func TryReadFromGitlabCI() (*VersionInformation, error) {
+func TryReadFromGitlabCI(ignoreRevision bool, ignoreProjectName bool) (*VersionInformation, error) {
 	if !IsGitlabCIAvailable() {
 		return nil, nil
 	}
@@ -18,7 +18,7 @@ func TryReadFromGitlabCI() (*VersionInformation, error) {
 	vi := MakeVersionInformation()
 
 	// read project name
-	if vi.Name == "" {
+	if !ignoreProjectName && vi.Name == "" {
 		bn := os.Getenv("CI_PROJECT_NAME")
 
 		if bn != "" {
@@ -29,7 +29,7 @@ func TryReadFromGitlabCI() (*VersionInformation, error) {
 	}
 
 	// read revision
-	if vi.Revision == "" {
+	if !ignoreRevision && vi.Revision == "" {
 		bn := os.Getenv("CI_COMMIT_SHA")
 
 		if bn != "" {
