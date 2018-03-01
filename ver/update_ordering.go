@@ -45,8 +45,11 @@ func (s orderedUpdates) Less(i, j int) bool {
 	a := &s[i]
 	b := &s[j]
 
-	if a.weight() < b.weight() {
-		return true
+	wa := a.weight()
+	wb := b.weight()
+
+	if wa != wb {
+		return wa < wb
 	}
 
 	return a.Path < b.Path
@@ -54,6 +57,10 @@ func (s orderedUpdates) Less(i, j int) bool {
 
 func (s orderedUpdates) Swap(i, j int) {
 	s[i], s[j] = s[j], s[i]
+}
+
+func (s orderedUpdates) Sort() {
+	sort.Sort(s)
 }
 
 func orderUpdates(updates UpdateActions) orderedUpdates {
@@ -67,7 +74,7 @@ func orderUpdates(updates UpdateActions) orderedUpdates {
 	}
 
 	// sort the entries
-	sort.Sort(ret)
+	ret.Sort()
 
 	return ret
 }

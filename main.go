@@ -94,6 +94,16 @@ func main() {
 			b.WriteString("\n")
 		}
 
+		b.WriteString("\nTEMPLATE FUNCTIONS:\n")
+
+		for n, d := range ver.GetTemplateFileFunctions() {
+			b.WriteString("  ")
+			b.WriteString(n)
+			b.WriteString("\t")
+			b.WriteString(d)
+			b.WriteString("\n")
+		}
+
 		b.WriteString("\n  See for more details: https://golang.org/pkg/text/template/\n\n")
 
 		cli.AppHelpTemplate = b.String()

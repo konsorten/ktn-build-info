@@ -37,7 +37,7 @@ var AllOutputs = []OutputSpec{
 		Parameters: []string{
 			"file:{path}\tPath to the JSON file.",
 			"indent:{chars}\tCharacters to use for indent, like four space characters.",
-			"!{path}:{value}\tSet the value at {path} to {value}. All template file fields are supported. Strings have to be quoted, e.g. '\"{$.Author$}\"'. Missing objects are created automatically.",
+			"!{path}:{value}\tSet the value at {path} to {value}. All template file fields are supported. Strings have to be quoted, e.g. '\"{$.Author$}\"' or '{$.Author | asQuoted$}'. Missing objects are created automatically.",
 			"!{path}:$null$\tSets the value at {path} to null.",
 			"!{path}:$delete$\tDeletes the value at {path}.",
 		},

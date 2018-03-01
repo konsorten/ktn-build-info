@@ -37,16 +37,141 @@ type templateFileData struct {
 	BuildDate     time.Time `doc:"The current timestamp as Go time.Time object, usage: {$.BuildDate.Year$}"`
 }
 
-func GetTemplateFileFields() map[string]string {
-	m := make(map[string]string)
+func GetTemplateFileFields() ItemDocumentation {
+	var m ItemDocumentation
 
 	s := reflect.TypeOf(templateFileData{})
 
 	for i := 0; i < s.NumField(); i++ {
 		f := s.Field(i)
 
-		m[f.Name] = f.Tag.Get("doc")
+		m = append(m, ItemDocumentationEntry{f.Name, f.Tag.Get("doc")})
 	}
+
+	m.Sort()
+
+	return m
+}
+
+type templateFileFunctions struct {
+	AsInt      interface{} `doc:"Convert the value to an integer number. Use this to convert enumerations to their respective numeric value."`
+	AsString   interface{} `doc:"Convert the value to a string. Use this to convert complex objects to their string representation."`
+	AsBool     interface{} `doc:"Convert the value to a boolean value. Use this to convert strings or numbers to true/false."`
+	AsQuoted   interface{} `doc:"Convert the value to a quoted string. Use this to convert values to a quoted string. Will escape existing quotes to '\\\"'."`
+	EncodeHtml interface{} `doc:"Encode the value to be HTML compatible, e.g. '&' becomes '&quot;'."`
+	EncodeXml  interface{} `doc:"Encode the value to be XML compatible, e.g. '&' becomes '&quot;'."`
+	EncodeUrl  interface{} `doc:"Encode the value to be URL compatible, e.g. '&' becomes '%26'."`
+}
+
+var templateFileFunctionsImpl = templateFileFunctions{
+	AsInt: func(value interface{}) (ret int) {
+		switch v := value.(type) {
+		case time.Month:
+			ret = int(v)
+		case string:
+			ret, _ = strconv.Atoi(v)
+		default:
+			ret, _ = strconv.Atoi(fmt.Sprintf("%v", v))
+		}
+		return
+	},
+
+	AsString: func(value interface{}) (ret string) {
+		switch v := value.(type) {
+		case string:
+			ret = v
+		default:
+			ret = fmt.Sprintf("%v", v)
+		}
+		return
+	},
+
+	AsBool: func(value interface{}) (ret bool) {
+		switch v := value.(type) {
+		case int:
+			ret = v != 0
+		case float32:
+			ret = v != 0
+		case float64:
+			ret = v != 0
+		case string:
+			ret, _ = strconv.ParseBool(v)
+		default:
+			ret, _ = strconv.ParseBool(fmt.Sprintf("%v", v))
+		}
+		return
+	},
+
+	AsQuoted: func(value interface{}) (ret string) {
+		switch v := value.(type) {
+		case string:
+			ret = v
+		default:
+			ret = fmt.Sprintf("%v", v)
+		}
+
+		ret = fmt.Sprintf("\"%v\"", strings.Replace(ret, "\"", "\\\"", -1))
+		return
+	},
+
+	EncodeHtml: func(value interface{}) (ret string) {
+		switch v := value.(type) {
+		case string:
+			ret = html.EscapeString(v)
+		default:
+			ret = html.EscapeString(fmt.Sprintf("%v", v))
+		}
+		return
+	},
+
+	EncodeXml: func(value interface{}) (ret string) {
+		switch v := value.(type) {
+		case string:
+			ret = html.EscapeString(v)
+		default:
+			ret = html.EscapeString(fmt.Sprintf("%v", v))
+		}
+		return
+	},
+
+	EncodeUrl: func(value interface{}) (ret string) {
+		switch v := value.(type) {
+		case string:
+			ret = url.QueryEscape(v)
+		default:
+			ret = url.QueryEscape(fmt.Sprintf("%v", v))
+		}
+		return
+	},
+}
+
+func GetTemplateFileFunctionsMap() template.FuncMap {
+	m := make(template.FuncMap)
+
+	s := reflect.TypeOf(templateFileFunctionsImpl)
+	v := reflect.ValueOf(templateFileFunctionsImpl)
+
+	for i := 0; i < s.NumField(); i++ {
+		f := s.Field(i)
+
+		m[strings.ToLower(f.Name[:1])+f.Name[1:]] = v.Field(i).Interface()
+	}
+
+	return m
+}
+
+func GetTemplateFileFunctions() ItemDocumentation {
+	var m ItemDocumentation
+
+	s := reflect.TypeOf(templateFileFunctionsImpl)
+
+	for i := 0; i < s.NumField(); i++ {
+		f := s.Field(i)
+
+		m = append(m, ItemDocumentationEntry{strings.ToLower(f.Name[:1]) + f.Name[1:], f.Tag.Get("doc")})
+	}
+
+	m.Sort()
 
 	return m
 }
@@ -70,85 +195,8 @@ func RenderTemplate(templateContent string, templateName string, vi *VersionInfo
 		BuildDate:     timestamp,
 	}
 
-	// template functions
-	templateFuncs := template.FuncMap{
-		"asInt": func(value interface{}) (ret int) {
-			switch v := value.(type) {
-			case time.Month:
-				ret = int(v)
-			case string:
-				ret, _ = strconv.Atoi(v)
-			default:
-				ret, _ = strconv.Atoi(fmt.Sprintf("%v", v))
-			}
-			return
-		},
-		"asString": func(value interface{}) (ret string) {
-			switch v := value.(type) {
-			case string:
-				ret = v
-			default:
-				ret = fmt.Sprintf("%v", v)
-			}
-			return
-		},
-		"asBool": func(value interface{}) (ret bool) {
-			switch v := value.(type) {
-			case int:
-				ret = v != 0
-			case float32:
-				ret = v != 0
-			case float64:
-				ret = v != 0
-			case string:
-				ret, _ = strconv.ParseBool(v)
-			default:
-				ret, _ = strconv.ParseBool(fmt.Sprintf("%v", v))
-			}
-			return
-		},
-		"asQuoted": func(value interface{}) (ret string) {
-			switch v := value.(type) {
-			case string:
-				ret = v
-			default:
-				ret = fmt.Sprintf("%v", v)
-			}
-
-			ret = fmt.Sprintf("\"%v\"", strings.Replace(ret, "\"", "\\\"", -1))
-			return
-		},
-		"encodeHtml": func(value interface{}) (ret string) {
-			switch v := value.(type) {
-			case string:
-				ret = html.EscapeString(v)
-			default:
-				ret = html.EscapeString(fmt.Sprintf("%v", v))
-			}
-			return
-		},
-		"encodeXml": func(value interface{}) (ret string) {
-			switch v := value.(type) {
-			case string:
-				ret = html.EscapeString(v)
-			default:
-				ret = html.EscapeString(fmt.Sprintf("%v", v))
-			}
-			return
-		},
-		"encodeUrl": func(value interface{}) (ret string) {
-			switch v := value.(type) {
-			case string:
-				ret = url.QueryEscape(v)
-			default:
-				ret = url.QueryEscape(fmt.Sprintf("%v", v))
-			}
-			return
-		},
-	}
-
 	// parse the template
-	templ, err := template.New(templateName).Delims(TemplateFileFieldPrefix, TemplateFileFieldSuffix).Funcs(templateFuncs).Parse(templateContent)
+	templ, err := template.New(templateName).Delims(TemplateFileFieldPrefix, TemplateFileFieldSuffix).Funcs(GetTemplateFileFunctionsMap()).Parse(templateContent)
 
 	if err != nil {
 		return "", err
