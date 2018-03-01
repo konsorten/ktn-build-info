@@ -1,4 +1,8 @@
 {
+    "Name": "{$.Name$}",
+    "Description": "{$.Description$}",
+    "License": "{$.License$}",
+
     "Author": "{$.Author$}",
     "Website": "{$.Website$}",
     "Email": "{$.Email$}",

@@ -12,7 +12,7 @@ const (
 	PackageJsonFilename = "package.json"
 )
 
-func TryReadFromPackageJSON(ignoreName bool, ignoreVersion bool, ignoreDescription bool, ignoreAuthor bool) (*VersionInformation, error) {
+func TryReadFromPackageJSON(ignoreName bool, ignoreVersion bool, ignoreDescription bool, ignoreAuthor bool, ignoreLicense bool) (*VersionInformation, error) {
 	// check if the file exists
 	if _, err := os.Stat(PackageJsonFilename); err != nil {
 		log.Debugf("No %v found", PackageJsonFilename)
@@ -42,6 +42,10 @@ func TryReadFromPackageJSON(ignoreName bool, ignoreVersion bool, ignoreDescripti
 
 	if c := json.Path("description"); !ignoreDescription && c != nil {
 		vi.Description = c.Data().(string)
+	}
+
+	if c := json.Path("license"); !ignoreLicense && c != nil {
+		vi.License = c.Data().(string)
 	}
 
 	// parse author information
@@ -92,7 +96,13 @@ func UpdatePackageJSON(vi *VersionInformation) error {
 		return err
 	}
 
-	_, err = json.SetP(vi.Name, "description")
+	_, err = json.SetP(vi.Description, "description")
+
+	if err != nil {
+		return err
+	}
+
+	_, err = json.SetP(vi.License, "license")
 
 	if err != nil {
 		return err

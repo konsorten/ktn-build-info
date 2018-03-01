@@ -23,6 +23,9 @@ const (
 )
 
 type templateFileData struct {
+	Name          string    `doc:"The name/ID of the project."`
+	Description   string    `doc:"The description of the project."`
+	License       string    `doc:"The license which applies to the project."`
 	Author        string    `doc:"The name of the author/manufacturer, e.g. the company name."`
 	Website       string    `doc:"The website of the author or the product."`
 	Email         string    `doc:"The support e-mail address for the product."`
@@ -181,6 +184,9 @@ func RenderTemplate(templateContent string, templateName string, vi *VersionInfo
 	timestamp := time.Unix(int64(vi.BuildTimestamp), 0).UTC()
 
 	data := templateFileData{
+		Name:          vi.Name,
+		Description:   vi.Description,
+		License:       vi.License,
 		Author:        vi.Author,
 		Website:       vi.Website,
 		Email:         vi.Email,

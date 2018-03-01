@@ -19,6 +19,7 @@ type versionInfoYAML struct {
 	Product struct {
 		Name        string `yaml:"name"`
 		Description string `yaml:"desc"`
+		License     string `yaml:"license"`
 	} `yaml:"product"`
 
 	Author struct {
@@ -102,6 +103,7 @@ func tryReadVersionInfoYAMLInternal(filename string) (*VersionInformation, error
 	vi.Website = viy.Author.Website
 	vi.Name = viy.Product.Name
 	vi.Description = viy.Product.Description
+	vi.License = viy.Product.License
 
 	return vi, nil
 }

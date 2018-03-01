@@ -2,3 +2,6 @@ author:
   name: marvin + konsorten GmbH
   email: open-source@konsorten.de
   url: http://www.konsorten.de
+
+product:
+  license: MIT

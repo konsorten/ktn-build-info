@@ -13,6 +13,7 @@ type VersionInformation struct {
 	Website     string
 	Name        string
 	Description string
+	License     string
 
 	Major  int
 	Minor  int
@@ -64,6 +65,11 @@ func (vi *VersionInformation) IsValid() (ok bool, errors []string) {
 	if vi.Description == "" {
 		ok = false
 		errors = append(errors, "Description is empty")
+	}
+
+	if vi.License == "" {
+		ok = false
+		errors = append(errors, "License is empty")
 	}
 
 	if vi.Major < 0 {
@@ -171,6 +177,10 @@ func (vi *VersionInformation) CopyMissingFrom(copy *VersionInformation) {
 
 	if vi.Description == "" && copy.Description != "" {
 		vi.Description = copy.Description
+	}
+
+	if vi.License == "" && copy.License != "" {
+		vi.License = copy.License
 	}
 
 	if vi.Email == "" && copy.Email != "" {

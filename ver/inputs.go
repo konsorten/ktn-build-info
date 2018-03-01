@@ -61,6 +61,7 @@ var AllInputs = []InputSpec{
 		Parameters: []string{
 			"name:false\tIgnore the project name.",
 			"desc:false\tIgnore the project description.",
+			"license:false\tIgnore the project license information.",
 			"version:false\tIgnore the project version number.",
 			"author:false\tIgnore the project author information.",
 		},
@@ -70,6 +71,7 @@ var AllInputs = []InputSpec{
 				params["version"] == "false",
 				params["desc"] == "false",
 				params["author"] == "false",
+				params["license"] == "false",
 			)
 		},
 	},
