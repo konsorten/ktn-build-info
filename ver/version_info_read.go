@@ -28,12 +28,12 @@ type versionInfoYAML struct {
 	} `yaml:"author"`
 }
 
-func TryReadFromVersionInfoYAML() (*VersionInformation, error) {
+func TryReadFromVersionInfoYAML(maxDepth int) (*VersionInformation, error) {
 	// gather version information
 	path := VersionInfoYamlFilename
 	var found []*VersionInformation
 
-	for {
+	for i := 0; i <= maxDepth; i++ {
 		vii, err := tryReadVersionInfoYAMLInternal(path)
 
 		if err != nil {

@@ -23,7 +23,7 @@ func TestTryReadVersionInfoYAML_simple(t *testing.T) {
 	}
 
 	// read version information
-	found, err := TryReadFromVersionInfoYAML()
+	found, err := TryReadFromVersionInfoYAML(10)
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
@@ -56,7 +56,7 @@ func TestTryReadVersionInfoYAML_complex(t *testing.T) {
 	}
 
 	// read version information
-	found, err := TryReadFromVersionInfoYAML()
+	found, err := TryReadFromVersionInfoYAML(10)
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)

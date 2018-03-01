@@ -2,6 +2,9 @@ package ver
 
 import (
 	"fmt"
+	"strconv"
+
+	log "github.com/Sirupsen/logrus"
 )
 
 type InputAction = func(params map[string]string) (*VersionInformation, error)
@@ -17,8 +20,25 @@ var AllInputs = []InputSpec{
 	InputSpec{
 		Name:        "version-info",
 		Description: fmt.Sprintf("Read project and version information from an existing %v file in the current or parent directories.", VersionInfoYamlFilename),
+		Parameters: []string{
+			"depth:{levels}\tLimit depth of directories to scan. Set to 0 for current directory, only. Default is 10.",
+		},
 		Action: func(params map[string]string) (*VersionInformation, error) {
-			return TryReadFromVersionInfoYAML()
+			// retrieve max depth
+			maxDepth := 10
+
+			if params["depth"] != "" {
+				md, err := strconv.Atoi(params["depth"])
+
+				if err != nil {
+					log.Errorf("Failed to parse 'maxDepth' parameter: %v", params["depth"])
+					return nil, err
+				}
+
+				maxDepth = md
+			}
+
+			return TryReadFromVersionInfoYAML(maxDepth)
 		},
 	},
 	InputSpec{

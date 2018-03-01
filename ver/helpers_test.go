@@ -39,7 +39,7 @@ func createTestVersionInformationFromYAML(t *testing.T) *VersionInformation {
 	}
 
 	// read version information
-	found, err := TryReadFromVersionInfoYAML()
+	found, err := TryReadFromVersionInfoYAML(0)
 
 	if err != nil {
 		t.Fatalf("Failed to read version info: %v", err)
