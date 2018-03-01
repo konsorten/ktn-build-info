@@ -32,6 +32,13 @@ var AllOutputs = []OutputSpec{
 		},
 	},
 	OutputSpec{
+		Name:        "update-npm",
+		Description: fmt.Sprintf("Updates an existing NPM %v file in the current directory.", PackageJsonFilename),
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			return UpdatePackageJSON(vi)
+		},
+	},
+	OutputSpec{
 		Name:        "update-json",
 		Description: "Updates an existing JSON document.",
 		Parameters: []string{

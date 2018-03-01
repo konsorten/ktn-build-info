@@ -1,7 +1,6 @@
 package ver
 
 import (
-	"io/ioutil"
 	"os"
 	"testing"
 
@@ -17,50 +16,19 @@ func TestRenderTemplateFile(t *testing.T) {
 	os.Chdir("examples/template")
 	defer os.Chdir(currDir)
 
-	// read host information
-	host, err := TryReadFromBuildHost()
-
-	if err != nil {
-		t.Fatalf("Failed to read build host info: %v", err)
-	}
-
-	// read version information
-	found, err := TryReadFromVersionInfoYAML()
-
-	if err != nil {
-		t.Fatalf("Failed to read version info: %v", err)
-	}
-
-	if found == nil {
-		t.Fatalf("%v not found", VersionInfoYamlFilename)
-	}
-
-	found.CopyMissingFrom(host)
-	found.Build = 4
-	found.Revision = "abcdef0"
-
-	if ok, _ := found.IsValid(); !ok {
-		t.Fatal("Invalid version information")
-	}
+	found := createTestVersionInformationFromYAML(t)
 
 	// render template
-	err = found.WriteTemplateFile("test.json.template")
+	err := found.WriteTemplateFile("test.json.template")
 
 	if err != nil {
 		t.Fatalf("Failed to render template: %v", err)
 	}
 
 	// read the json
-	data, err := ioutil.ReadFile("test.json")
+	_, err = gabs.ParseJSONFile("test.json")
 
 	if err != nil {
 		t.Fatalf("Failed to read rendered template: %v", err)
-	}
-
-	// parse the output json file
-	_, err = gabs.ParseJSON(data)
-
-	if err != nil {
-		t.Fatalf("Failed to parse rendered template: %v", err)
 	}
 }

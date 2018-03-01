@@ -1,0 +1,55 @@
+{
+  "name": "padsy_api",
+  "version": "2.1.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www"
+  },
+  "description": "padsy_api",
+  "author": {
+    "name": "TwinPoint Software GmbH",
+    "email": "info@twinpoint.de"
+  },
+  "dependencies": {
+    "adal-node": "*",
+    "azure-keyvault": "^1.0.0",
+    "big-number": "*",
+    "body-parser": "*",
+    "compare-version": "*",
+    "debug": "*",
+    "express": "*",
+    "fs-extra": "*",
+    "grunt": "*",
+    "jsen": "*",
+    "lru-cache": "*",
+    "markdown-it": "*",
+    "moment": "*",
+    "mongodb": "*",
+    "morgan": "*",
+    "njwt": "*",
+    "node-celery": "github:mher/node-celery",
+    "printf": "*",
+    "qt-binary-json-helper": "*",
+    "querystring": "*",
+    "redis": "*",
+    "request": "*",
+    "serve-favicon": "*",
+    "source-map-support": "*",
+    "ssl-root-cas": "*",
+    "streamifier": "*",
+    "strip-bom": "*",
+    "toobusy-js": "*",
+    "url-parse": "*",
+    "uuid": "*",
+    "ws": "*",
+    "xmlbuilder": "*"
+  },
+  "devDependencies": {
+    "@types/mocha": "*",
+    "@types/node": "^6.0.81",
+    "js-yaml": "*",
+    "mocha": "*",
+    "mocha-teamcity-reporter": "*",
+    "typescript": "~2.5.0"
+  }
+}

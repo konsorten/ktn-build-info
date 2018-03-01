@@ -4,6 +4,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/Jeffail/gabs"
 	log "github.com/Sirupsen/logrus"
 )
 
@@ -78,5 +79,32 @@ func TestTryReadPackageJSON_oldAuthor(t *testing.T) {
 
 	if ok, _ := found.IsValid(); !ok {
 		t.Fatal("Invalid version information")
+	}
+}
+
+func TestUpdatePackageJson(t *testing.T) {
+	log.SetLevel(log.DebugLevel)
+
+	// change to test data dir
+	currDir, _ := os.Getwd()
+	os.Chdir("examples/npm-update")
+	defer os.Chdir(currDir)
+
+	copyFile(t, "package.json.test", PackageJsonFilename)
+
+	found := createTestVersionInformationFromYAML(t)
+
+	// update package json
+	err := UpdatePackageJSON(found)
+
+	if err != nil {
+		t.Fatalf("Failed to update NPM package.json: %v", err)
+	}
+
+	// parse the output json file
+	_, err = gabs.ParseJSONFile(PackageJsonFilename)
+
+	if err != nil {
+		t.Fatalf("Failed to read updated NPM package.json: %v", err)
 	}
 }

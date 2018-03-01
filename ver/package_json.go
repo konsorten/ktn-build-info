@@ -19,18 +19,10 @@ func TryReadFromPackageJSON(ignoreName bool, ignoreVersion bool, ignoreDescripti
 		return nil, nil
 	}
 
-	// read the json
-	data, err := ioutil.ReadFile(PackageJsonFilename)
-
-	if err != nil {
-		log.Errorf("Failed to read %v file: %v", PackageJsonFilename, err)
-		return nil, err
-	}
-
 	log.Debugf("Found version information: %v", PackageJsonFilename)
 
 	// parse the package json file
-	json, err := gabs.ParseJSON(data)
+	json, err := gabs.ParseJSONFile(PackageJsonFilename)
 
 	if err != nil {
 		log.Errorf("Failed to parse %v file: %v", PackageJsonFilename, err)
@@ -76,4 +68,67 @@ func TryReadFromPackageJSON(ignoreName bool, ignoreVersion bool, ignoreDescripti
 
 	// done
 	return vi, nil
+}
+
+func UpdatePackageJSON(vi *VersionInformation) error {
+	// parse the package json file
+	json, err := gabs.ParseJSONFile(PackageJsonFilename)
+
+	if err != nil {
+		log.Errorf("Failed to parse %v file: %v", PackageJsonFilename, err)
+		return err
+	}
+
+	// update the data
+	_, err = json.SetP(vi.SemVerString(), "version")
+
+	if err != nil {
+		return err
+	}
+
+	_, err = json.SetP(vi.Name, "name")
+
+	if err != nil {
+		return err
+	}
+
+	_, err = json.SetP(vi.Name, "description")
+
+	if err != nil {
+		return err
+	}
+
+	// drop old author information
+	json.DeleteP("author")
+
+	// create new author information
+	_, err = json.SetP(vi.Author, "author.name")
+
+	if err != nil {
+		return err
+	}
+
+	_, err = json.SetP(vi.Email, "author.email")
+
+	if err != nil {
+		return err
+	}
+
+	_, err = json.SetP(vi.Website, "author.url")
+
+	if err != nil {
+		return err
+	}
+
+	// write back the file
+	err = ioutil.WriteFile(PackageJsonFilename, json.BytesIndent("", "  "), os.FileMode(644))
+
+	if err != nil {
+		return err
+	}
+
+	// done
+	log.Infof("Updated NPM %v file", PackageJsonFilename)
+
+	return nil
 }

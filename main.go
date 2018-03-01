@@ -86,21 +86,21 @@ func main() {
 		// add template file fields
 		b.WriteString("\nTEMPLATE FILE FIELDS:\n")
 
-		for n, d := range ver.GetTemplateFileFields() {
+		for _, d := range ver.GetTemplateFileFields() {
 			b.WriteString("  {{\"")
-			b.WriteString(fmt.Sprintf("%v.%v%v", ver.TemplateFileFieldPrefix, n, ver.TemplateFileFieldSuffix))
+			b.WriteString(fmt.Sprintf("%v.%v%v", ver.TemplateFileFieldPrefix, d.Name, ver.TemplateFileFieldSuffix))
 			b.WriteString("\"}}\t")
-			b.WriteString(d)
+			b.WriteString(d.Description)
 			b.WriteString("\n")
 		}
 
 		b.WriteString("\nTEMPLATE FUNCTIONS:\n")
 
-		for n, d := range ver.GetTemplateFileFunctions() {
+		for _, d := range ver.GetTemplateFileFunctions() {
 			b.WriteString("  ")
-			b.WriteString(n)
+			b.WriteString(d.Name)
 			b.WriteString("\t")
-			b.WriteString(d)
+			b.WriteString(d.Description)
 			b.WriteString("\n")
 		}
 
