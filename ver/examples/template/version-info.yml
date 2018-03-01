@@ -27,6 +27,28 @@ outputs:
     "!UpdateJsonTest.nil": $null$
     "!UpdateJsonTest.txt": '"hello world"'
     "!UpdateJsonTest.ts": "{$.BuildDateUnix$}"
-    "!UpdateJsonTest.author": '"{$.Author$}"'
+    "!UpdateJsonTest.tsStr": "{$.BuildDateUnix | asQuoted$}"
+    "!UpdateJsonTest.author": "{$.Author | asQuoted$}"
     "!UpdateJsonTestDelete.del": $delete$
+  - action: template
+    file: test.xml.template
+  - action: update-xml
+    file: test.xml
+    indent: "    "
+    "!/updateXmlTest": $create$
+    "!/updateXmlTest/single1": $ensure$
+    "!/updateXmlTest/single2": $create$
+    "!/updateXmlTest/num": $ensure$
+    "!/updateXmlTest/num/.": 123
+    "!/updateXmlTest/b": $ensure$
+    "!/updateXmlTest/b/.": true
+    "!/updateXmlTest/nil": $ensure$
+    "!/updateXmlTest/txt": '"hello world"'
+    "!/updateXmlTest/ts": "{$.BuildDateUnix$}"
+    "!/updateXmlTest/author": $create$
+    "!/updateXmlTest/author/.": "{$.Author$}"
+    "!/updateXmlTest/author/@url": "{$.Website$}"
+    "!/updateXmlTest/author/@email": "{$.Email$}"
+    "!/updateXmlTestDelete/del": $delete$
+    "!/updateXmlTestDelete/del2/@d": $delete$
   - action: teamcity

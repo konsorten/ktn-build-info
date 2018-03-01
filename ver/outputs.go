@@ -37,7 +37,7 @@ var AllOutputs = []OutputSpec{
 		Parameters: []string{
 			"file:{path}\tPath to the JSON file.",
 			"indent:{chars}\tCharacters to use for indent, like four space characters.",
-			"!{path}:{value}\tSet the value at {path} to {value}. All template file fields are supported. Strings have to be quoted, e.g. '\"{$.Author$}\"'",
+			"!{path}:{value}\tSet the value at {path} to {value}. All template file fields are supported. Strings have to be quoted, e.g. '\"{$.Author$}\"'. Missing objects are created automatically.",
 			"!{path}:$null$\tSets the value at {path} to null.",
 			"!{path}:$delete$\tDeletes the value at {path}.",
 		},
@@ -49,7 +49,7 @@ var AllOutputs = []OutputSpec{
 			}
 
 			// gather actions
-			actions := make(map[string]string)
+			actions := make(UpdateActions)
 
 			for k, v := range params {
 				if strings.HasPrefix(k, "!") {
@@ -58,6 +58,36 @@ var AllOutputs = []OutputSpec{
 			}
 
 			return UpdateJsonFile(f, actions, vi, params["indent"])
+		},
+	},
+	OutputSpec{
+		Name:        "update-xml",
+		Description: "Updates an existing XML document.",
+		Parameters: []string{
+			"file:{path}\tPath to the XML file.",
+			"indent:{chars}\tCharacters to use for indent, like four space characters.",
+			"!{xpath}:{value}\tSet the value at {xpath} to {value}. The target element/attribute must exist. All template file fields are supported.",
+			"!{xpath}:$create$\tCreates a new element or attribute from {xpath}. The parent element must exist.",
+			"!{xpath}:$ensure$\tIf missing, creates a new element or attribute from {xpath}. The parent element must exist.",
+			"!{xpath}:$delete$\tDeletes the value at {xpath}.",
+		},
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			f := params["file"]
+
+			if f == "" {
+				return fmt.Errorf("No XML file specified; missing 'file' parameter")
+			}
+
+			// gather actions
+			actions := make(UpdateActions)
+
+			for k, v := range params {
+				if strings.HasPrefix(k, "!") {
+					actions[k[1:]] = v
+				}
+			}
+
+			return UpdateXmlFile(f, actions, vi, params["indent"])
 		},
 	},
 	OutputSpec{

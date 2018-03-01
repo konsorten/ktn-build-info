@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<test>
+    <!-- comment -->
+    <author name="{$.Author$}" website="{$.Website$}" email="{$.Email$}" />
+
+    <version>{$.Version$}</version>
+    <versionTitle>{$.VersionTitle$}</versionTitle>
+    <versionParts major="{$index .VersionParts 0$}" minor="{$index .VersionParts 1$}" hotfix="{$index .VersionParts 2$}" build="{$index .VersionParts 3$}" />
+    <semVer>{$.SemVer$}</semVer>
+
+    <revision>{$.Revision$}</revision>
+
+    <build>
+        <buildHost>{$.BuildHost$}</buildHost>
+        <buildDateUnix>{$.BuildDateUnix$}</buildDateUnix>
+        <buildDateISO>{$.BuildDateISO$}</buildDateISO>
+        <buildDate year="$.BuildDate.Year$" month="{$.BuildDate.Month | asInt$}" day="{$.BuildDate.Day$}" />
+    </build>
+
+    <updateXmlTestDelete>
+        <del />
+        <del2 d="" keep="1" />
+    </updateXmlTestDelete>
+</test>

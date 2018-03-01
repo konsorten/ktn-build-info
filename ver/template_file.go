@@ -83,6 +83,15 @@ func RenderTemplate(templateContent string, templateName string, vi *VersionInfo
 			}
 			return
 		},
+		"asString": func(value interface{}) (ret string) {
+			switch v := value.(type) {
+			case string:
+				ret = v
+			default:
+				ret = fmt.Sprintf("%v", v)
+			}
+			return
+		},
 		"asBool": func(value interface{}) (ret bool) {
 			switch v := value.(type) {
 			case int:
@@ -96,6 +105,17 @@ func RenderTemplate(templateContent string, templateName string, vi *VersionInfo
 			default:
 				ret, _ = strconv.ParseBool(fmt.Sprintf("%v", v))
 			}
+			return
+		},
+		"asQuoted": func(value interface{}) (ret string) {
+			switch v := value.(type) {
+			case string:
+				ret = v
+			default:
+				ret = fmt.Sprintf("%v", v)
+			}
+
+			ret = fmt.Sprintf("\"%v\"", strings.Replace(ret, "\"", "\\\"", -1))
 			return
 		},
 		"encodeHtml": func(value interface{}) (ret string) {

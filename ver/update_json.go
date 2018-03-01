@@ -11,8 +11,10 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-func UpdateJsonFile(filePath string, updates map[string]string, vi *VersionInformation, indent string) error {
-	// parse the package json file
+type UpdateActions map[string]string
+
+func UpdateJsonFile(filePath string, updates UpdateActions, vi *VersionInformation, indent string) error {
+	// parse the json file
 	json, err := gabs.ParseJSONFile(filePath)
 
 	if err != nil {
@@ -21,7 +23,10 @@ func UpdateJsonFile(filePath string, updates map[string]string, vi *VersionInfor
 	}
 
 	// apply updates
-	for path, update := range updates {
+	for _, u := range orderUpdates(updates) {
+		update := u.Update
+		path := u.Path
+
 		switch update {
 		case "$delete$":
 			if json.ExistsP(path) {
