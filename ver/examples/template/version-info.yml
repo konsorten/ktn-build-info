@@ -51,4 +51,10 @@ outputs:
     "!/updateXmlTest/author/@email": "{$.Email$}"
     "!/updateXmlTestDelete/del": $delete$
     "!/updateXmlTestDelete/del2/@d": $delete$
+  - action: template
+    file: test.txt.template
+  - action: update-regex
+    file: test.txt
+    "!AUTHORNAME[0-9]": "{$.Author$}"
+    "!VERSION": "{$.Version$}"
   - action: teamcity

@@ -98,6 +98,33 @@ var AllOutputs = []OutputSpec{
 		},
 	},
 	OutputSpec{
+		Name:        "update-regex",
+		Description: "Updates an existing text document.",
+		Parameters: []string{
+			"file:{path}\tPath to the text file.",
+			"posix:true\tRestricts the regular expression to POSIX ERE (egrep) syntax.",
+			"!{regex}:{replace}\tReplaces all matches of {regex} with {replace}. All template file fields are supported.",
+		},
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			f := params["file"]
+
+			if f == "" {
+				return fmt.Errorf("No text file specified; missing 'file' parameter")
+			}
+
+			// gather actions
+			actions := make(UpdateActions)
+
+			for k, v := range params {
+				if strings.HasPrefix(k, "!") {
+					actions[k[1:]] = v
+				}
+			}
+
+			return UpdateRegexFile(f, actions, params["posix"] == "true", vi)
+		},
+	},
+	OutputSpec{
 		Name:        "teamcity",
 		Description: "Writes the version number back to TeamCity.",
 		Action: func(vi *VersionInformation, params map[string]string) error {
