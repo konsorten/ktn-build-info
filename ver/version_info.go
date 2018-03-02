@@ -159,6 +159,10 @@ func (vi *VersionInformation) SetSemVersion(semVerString string) {
 }
 
 func (vi *VersionInformation) CopyMissingFrom(copy *VersionInformation) {
+	if copy == nil {
+		return
+	}
+
 	if vi.Author == "" && copy.Author != "" {
 		vi.Author = copy.Author
 	}

@@ -38,14 +38,10 @@ func RunCurrentDirectory() error {
 		}
 
 		// run the action
-		vi, err := spec.Action(i.Parameters)
+		err := spec.Action(result, i.Parameters)
 
 		if err != nil {
 			return fmt.Errorf("Failed to run input action %v: %v", i.Name, err)
-		}
-
-		if vi != nil {
-			result.CopyMissingFrom(vi)
 		}
 	}
 

@@ -7,7 +7,7 @@ import (
 	log "github.com/Sirupsen/logrus"
 )
 
-type InputAction = func(params map[string]string) (*VersionInformation, error)
+type InputAction = func(vi *VersionInformation, params map[string]string) error
 
 type InputSpec struct {
 	Name        string
@@ -23,7 +23,7 @@ var AllInputs = []InputSpec{
 		Parameters: []string{
 			"depth:{levels}\tLimit depth of directories to scan. Set to 0 for current directory, only. Default is 10.",
 		},
-		Action: func(params map[string]string) (*VersionInformation, error) {
+		Action: func(vi *VersionInformation, params map[string]string) error {
 			// retrieve max depth
 			maxDepth := 10
 
@@ -32,27 +32,65 @@ var AllInputs = []InputSpec{
 
 				if err != nil {
 					log.Errorf("Failed to parse 'maxDepth' parameter: %v", params["depth"])
-					return nil, err
+					return err
 				}
 
 				maxDepth = md
 			}
 
-			return TryReadFromVersionInfoYAML(maxDepth)
+			// run
+			ver, err := TryReadFromVersionInfoYAML(maxDepth)
+
+			if err != nil {
+				return err
+			}
+
+			vi.CopyMissingFrom(ver)
+
+			return nil
 		},
 	},
 	InputSpec{
 		Name:        "directory-name",
 		Description: "Use the working directory's name as project name.",
-		Action: func(params map[string]string) (*VersionInformation, error) {
-			return TryReadFromWorkingDirectory()
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			// run
+			ver, err := TryReadFromWorkingDirectory()
+
+			if err != nil {
+				return err
+			}
+
+			vi.CopyMissingFrom(ver)
+
+			return nil
 		},
 	},
 	InputSpec{
 		Name:        "build-host",
 		Description: "Use the current machine's name and time as build host and timestamp.",
-		Action: func(params map[string]string) (*VersionInformation, error) {
-			return TryReadFromBuildHost()
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			// run
+			ver, err := TryReadFromBuildHost()
+
+			if err != nil {
+				return err
+			}
+
+			vi.CopyMissingFrom(ver)
+
+			return nil
+		},
+	},
+	InputSpec{
+		Name:        "consul-build-id",
+		Description: "Retrieves a build number based on the build revision. Use this for non-numeric revisions, like Git.",
+		Parameters: []string{
+			"url:{consulurl}\tThe connection URL to consul, e.g. http://consul:8500/dc1 or http://:token@consul:8500/dc1.",
+			"root:{key}\tThe base KV path for the project, e.g. builds/myproject.",
+		},
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			return RetrieveBuildFromConsul(params["url"], params["root"], vi)
 		},
 	},
 	InputSpec{
@@ -65,21 +103,39 @@ var AllInputs = []InputSpec{
 			"version:false\tIgnore the project version number.",
 			"author:false\tIgnore the project author information.",
 		},
-		Action: func(params map[string]string) (*VersionInformation, error) {
-			return TryReadFromPackageJSON(
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			// run
+			ver, err := TryReadFromPackageJSON(
 				params["name"] == "false",
 				params["version"] == "false",
 				params["desc"] == "false",
 				params["author"] == "false",
 				params["license"] == "false",
 			)
+
+			if err != nil {
+				return err
+			}
+
+			vi.CopyMissingFrom(ver)
+
+			return nil
 		},
 	},
 	InputSpec{
 		Name:        "konsorten",
 		Description: "Use marvin + konsorten default author information.",
-		Action: func(params map[string]string) (*VersionInformation, error) {
-			return TryReadFromKonsortenDefaults()
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			// run
+			ver, err := TryReadFromKonsortenDefaults()
+
+			if err != nil {
+				return err
+			}
+
+			vi.CopyMissingFrom(ver)
+
+			return nil
 		},
 	},
 	InputSpec{
@@ -90,12 +146,21 @@ var AllInputs = []InputSpec{
 			"rev:false\tIgnore the revision number.",
 			"name:false\tIgnore the project name.",
 		},
-		Action: func(params map[string]string) (*VersionInformation, error) {
-			return TryReadFromTeamCity(
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			// run
+			ver, err := TryReadFromTeamCity(
 				params["build"] == "false",
 				params["rev"] == "false",
 				params["name"] == "false",
 			)
+
+			if err != nil {
+				return err
+			}
+
+			vi.CopyMissingFrom(ver)
+
+			return nil
 		},
 	},
 	InputSpec{
@@ -105,18 +170,36 @@ var AllInputs = []InputSpec{
 			"rev:false\tIgnore the revision number.",
 			"name:false\tIgnore the project name.",
 		},
-		Action: func(params map[string]string) (*VersionInformation, error) {
-			return TryReadFromGitlabCI(
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			// run
+			ver, err := TryReadFromGitlabCI(
 				params["rev"] == "false",
 				params["name"] == "false",
 			)
+
+			if err != nil {
+				return err
+			}
+
+			vi.CopyMissingFrom(ver)
+
+			return nil
 		},
 	},
 	InputSpec{
 		Name:        "git",
 		Description: "Read revision information from current directory's Git repository.",
-		Action: func(params map[string]string) (*VersionInformation, error) {
-			return TryReadFromGit()
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			// run
+			ver, err := TryReadFromGit()
+
+			if err != nil {
+				return err
+			}
+
+			vi.CopyMissingFrom(ver)
+
+			return nil
 		},
 	},
 }

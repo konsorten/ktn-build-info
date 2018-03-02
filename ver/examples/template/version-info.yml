@@ -15,6 +15,9 @@ inputs:
   - action: teamcity
     name: false
   - action: git
+  - action: consul-build-id
+    url: https://:5c7e1872-77b1-974a-973c-64a8316f3833@consul.konsorten.net/tpo
+    root: konsorten/build-info/build-info-template-test
   - action: version-info
 
 outputs:
