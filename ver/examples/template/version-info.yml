@@ -19,6 +19,8 @@ inputs:
     url: https://:5c7e1872-77b1-974a-973c-64a8316f3833@consul.konsorten.net/tpo
     root: konsorten/build-info/build-info-template-test
   - action: version-info
+  - action: limit-revision
+    length: 7
 
 outputs:
   - action: template
