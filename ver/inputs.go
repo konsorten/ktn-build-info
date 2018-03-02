@@ -202,6 +202,24 @@ var AllInputs = []InputSpec{
 			return nil
 		},
 	},
+	InputSpec{
+		Name:        "limit-revision",
+		Description: "Limits the length of the revision string.",
+		Parameters: []string{
+			"length:{int}\tThe number of characters to limit the revision string, e.g. 7 for Git short revision.",
+		},
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			l, err := strconv.Atoi(params["length"])
+
+			if err != nil {
+				return err
+			}
+
+			vi.LimitRevision(l)
+
+			return nil
+		},
+	},
 }
 
 func GetInputSpec(name string) *InputSpec {

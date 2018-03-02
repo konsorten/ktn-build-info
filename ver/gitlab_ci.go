@@ -33,7 +33,7 @@ func TryReadFromGitlabCI(ignoreRevision bool, ignoreProjectName bool) (*VersionI
 		bn := os.Getenv("CI_COMMIT_SHA")
 
 		if bn != "" {
-			vi.Revision = bn[0:6]
+			vi.Revision = bn
 
 			log.Debugf("Found Gitlab CI VCS revision: %v", vi.Revision)
 		}

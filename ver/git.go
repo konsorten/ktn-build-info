@@ -6,7 +6,7 @@ import (
 
 func TryReadFromGit() (*VersionInformation, error) {
 	// get revision
-	rev, err := exec.Command("git", "log", "-n", "1", "--pretty=format:%h").Output()
+	rev, err := exec.Command("git", "log", "-n", "1", "--pretty=format:%H").Output()
 
 	if err != nil {
 		return nil, err

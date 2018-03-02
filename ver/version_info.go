@@ -158,6 +158,14 @@ func (vi *VersionInformation) SetSemVersion(semVerString string) {
 	vi.Hotfix = int(ver.Patch)
 }
 
+func (vi *VersionInformation) LimitRevision(length int) {
+	if len(vi.Revision) <= length {
+		return
+	}
+
+	vi.Revision = vi.Revision[:length]
+}
+
 func (vi *VersionInformation) CopyMissingFrom(copy *VersionInformation) {
 	if copy == nil {
 		return
