@@ -3,7 +3,6 @@ package ver
 import (
 	"fmt"
 	"io/ioutil"
-	"os"
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
@@ -208,5 +207,5 @@ func UpdateXmlFile(filePath string, updates UpdateActions, vi *VersionInformatio
 		newContent = doc.XMLPrettyEx(indent)
 	}
 
-	return ioutil.WriteFile(filePath, []byte(newContent), os.FileMode(644))
+	return ioutil.WriteFile(filePath, []byte(newContent), 0644)
 }

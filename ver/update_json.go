@@ -5,7 +5,6 @@ import (
 	jsonImpl "encoding/json"
 	"fmt"
 	"io/ioutil"
-	"os"
 
 	"github.com/Jeffail/gabs"
 	log "github.com/Sirupsen/logrus"
@@ -96,5 +95,5 @@ func UpdateJsonFile(filePath string, updates UpdateActions, vi *VersionInformati
 		newContent = json.BytesIndent("", indent)
 	}
 
-	return ioutil.WriteFile(filePath, newContent, os.FileMode(644))
+	return ioutil.WriteFile(filePath, newContent, 0644)
 }

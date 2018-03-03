@@ -203,6 +203,29 @@ var AllInputs = []InputSpec{
 		},
 	},
 	InputSpec{
+		Name:        "env-vars",
+		Description: "Read build information from environment variables.",
+		Parameters: []string{
+			"name:{envVarName}\tRead the project name from the specified environment variable {envVarName}. Ignored if missing or empty.",
+			"desc:{envVarName}\tRead the project description from the specified environment variable {envVarName}. Ignored if missing or empty.",
+			"rev:{envVarName}\tRead the build revision from the specified environment variable {envVarName}. Ignored if missing or empty.",
+			"build:{envVarName}\tRead the build ID from the specified environment variable {envVarName}. Ignored if missing or empty.",
+			"buildHost:{envVarName}\tRead the build host name from the specified environment variable {envVarName}. Ignored if missing or empty.",
+		},
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			// run
+			ver, err := TryReadFromEnvironmentVariables(params)
+
+			if err != nil {
+				return err
+			}
+
+			vi.CopyMissingFrom(ver)
+
+			return nil
+		},
+	},
+	InputSpec{
 		Name:        "limit-revision",
 		Description: "Limits the length of the revision string.",
 		Parameters: []string{

@@ -131,7 +131,7 @@ func UpdatePackageJSON(vi *VersionInformation) error {
 	}
 
 	// write back the file
-	err = ioutil.WriteFile(PackageJsonFilename, json.BytesIndent("", "  "), os.FileMode(644))
+	err = ioutil.WriteFile(PackageJsonFilename, json.BytesIndent("", "  "), 0644)
 
 	if err != nil {
 		return err

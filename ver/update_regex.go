@@ -2,7 +2,6 @@ package ver
 
 import (
 	"io/ioutil"
-	"os"
 	"regexp"
 
 	log "github.com/Sirupsen/logrus"
@@ -42,7 +41,7 @@ func UpdateRegexFile(filename string, matchMap UpdateActions, usePosix bool, vi 
 	}
 
 	// write back the file
-	err = ioutil.WriteFile(filename, txt, os.FileMode(644))
+	err = ioutil.WriteFile(filename, txt, 0644)
 
 	if err != nil {
 		return err

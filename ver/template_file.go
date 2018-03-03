@@ -64,6 +64,7 @@ type templateFileFunctions struct {
 	EncodeHtml interface{} `doc:"Encode the value to be HTML compatible, e.g. '&' becomes '&quot;'."`
 	EncodeXml  interface{} `doc:"Encode the value to be XML compatible, e.g. '&' becomes '&quot;'."`
 	EncodeUrl  interface{} `doc:"Encode the value to be URL compatible, e.g. '&' becomes '%26'."`
+	EnvVar     interface{} `doc:"Reads the specified value from an environment variable, e.g. {$envVar \"TEMP\"$}."`
 }
 
 var templateFileFunctionsImpl = templateFileFunctions{
@@ -113,7 +114,10 @@ var templateFileFunctionsImpl = templateFileFunctions{
 			ret = fmt.Sprintf("%v", v)
 		}
 
-		ret = fmt.Sprintf("\"%v\"", strings.Replace(ret, "\"", "\\\"", -1))
+		ret = strings.Replace(ret, "\\", "\\\\", -1)
+		ret = strings.Replace(ret, "\"", "\\\"", -1)
+
+		ret = fmt.Sprintf("\"%v\"", ret)
 		return
 	},
 
@@ -145,6 +149,10 @@ var templateFileFunctionsImpl = templateFileFunctions{
 			ret = url.QueryEscape(fmt.Sprintf("%v", v))
 		}
 		return
+	},
+
+	EnvVar: func(value string) (ret string) {
+		return os.Getenv(value)
 	},
 }
 
@@ -256,5 +264,5 @@ func (vi *VersionInformation) WriteTemplateFile(templateFilePath string) error {
 	// write the file
 	outputPath := filepath.Join(filepath.Dir(templateFilePath), outputFilename)
 
-	return ioutil.WriteFile(outputPath, []byte(result), os.FileMode(644))
+	return ioutil.WriteFile(outputPath, []byte(result), 0644)
 }

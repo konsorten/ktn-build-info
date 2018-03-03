@@ -35,6 +35,8 @@ outputs:
     "!UpdateJsonTest.ts": "{$.BuildDateUnix$}"
     "!UpdateJsonTest.tsStr": "{$.BuildDateUnix | asQuoted$}"
     "!UpdateJsonTest.author": "{$.Author | asQuoted$}"
+    "!UpdateJsonTest.windir": "{$envVar \"windir\" | asQuoted$}"
+    "!UpdateJsonTest.shell": "{$envVar \"SHELL\" | asQuoted$}"
     "!UpdateJsonTestDelete.del": $delete$
   - action: template
     file: test.xml.template
