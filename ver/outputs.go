@@ -125,6 +125,13 @@ var AllOutputs = []OutputSpec{
 		},
 	},
 	OutputSpec{
+		Name:        "go-syso",
+		Description: fmt.Sprintf("Writes the version information to be embedded into an Go executable (%v). Supported on Windows, only.", goSysoFilename),
+		Action: func(vi *VersionInformation, params map[string]string) error {
+			return WriteGoSysoFile(vi)
+		},
+	},
+	OutputSpec{
 		Name:        "teamcity",
 		Description: "Writes the version number back to TeamCity.",
 		Action: func(vi *VersionInformation, params map[string]string) error {
