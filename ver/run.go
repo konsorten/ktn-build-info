@@ -15,6 +15,10 @@ func RunCurrentDirectory() error {
 		return err
 	}
 
+	if actions == nil {
+		return fmt.Errorf("No %v found", VersionInfoYamlFilename)
+	}
+
 	// nothing to do?
 	if len(actions.Inputs) <= 0 {
 		return fmt.Errorf("No input actions found")
