@@ -229,7 +229,7 @@ func RenderTemplate(templateContent string, templateName string, vi *VersionInfo
 	return b.String(), nil
 }
 
-func (vi *VersionInformation) WriteTemplateFile(templateFilePath string) error {
+func (vi *VersionInformation) WriteTemplateFile(templateFilePath string, fileMode os.FileMode) error {
 	log.Debugf("Rendering template: %v", templateFilePath)
 
 	// read the template

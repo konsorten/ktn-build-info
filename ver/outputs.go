@@ -2,6 +2,8 @@ package ver
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 	"strings"
 )
 
@@ -20,15 +22,32 @@ var AllOutputs = []OutputSpec{
 		Description: "Renders a template file and writes the result into a file dropping the last extension, e.g. myfile.c.template becomes myfile.c. Takes the relative file path as parameter.",
 		Parameters: []string{
 			"file:{path}\tPath to the template file.",
+			"mode:{filemode}\tFile mode to use for the file (Linux and macOS). Typical values are 644 for a regular file and 755 for an executable file.",
 		},
 		Action: func(vi *VersionInformation, params map[string]string) error {
+			// determine filename
 			f := params["file"]
 
 			if f == "" {
 				return fmt.Errorf("No template file specified; missing 'file' parameter")
 			}
 
-			return vi.WriteTemplateFile(f)
+			// parse the file mode
+			var fm os.FileMode = 0644
+
+			fmStr := params["mode"]
+
+			if fmStr != "" {
+				fmParsed, err := strconv.ParseUint(fmStr, 8, 32)
+
+				if err != nil {
+					return fmt.Errorf("Failed to parse file mode: %v: %v", fmStr, err)
+				}
+
+				fm = os.FileMode(fmParsed)
+			}
+
+			return vi.WriteTemplateFile(f, fm)
 		},
 	},
 	OutputSpec{
