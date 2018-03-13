@@ -19,7 +19,7 @@ func TestRenderTemplateFile(t *testing.T) {
 	found := createTestVersionInformationFromYAML(t)
 
 	// render template
-	err := found.WriteTemplateFile("test.json.template")
+	err := found.WriteTemplateFile("test.json.template", 0644)
 
 	if err != nil {
 		t.Fatalf("Failed to render template: %v", err)

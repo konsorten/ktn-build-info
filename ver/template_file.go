@@ -230,7 +230,7 @@ func RenderTemplate(templateContent string, templateName string, vi *VersionInfo
 }
 
 func (vi *VersionInformation) WriteTemplateFile(templateFilePath string, fileMode os.FileMode) error {
-	log.Debugf("Rendering template: %v", templateFilePath)
+	log.Debugf("Rendering template: %v (file mode: %o)", templateFilePath, uint32(fileMode))
 
 	// read the template
 	tc, err := ioutil.ReadFile(templateFilePath)
@@ -264,5 +264,5 @@ func (vi *VersionInformation) WriteTemplateFile(templateFilePath string, fileMod
 	// write the file
 	outputPath := filepath.Join(filepath.Dir(templateFilePath), outputFilename)
 
-	return ioutil.WriteFile(outputPath, []byte(result), 0644)
+	return ioutil.WriteFile(outputPath, []byte(result), fileMode)
 }
