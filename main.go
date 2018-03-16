@@ -19,7 +19,7 @@ func main() {
 
 	app := cli.NewApp()
 	app.Author = "marvin + konsorten GmbH"
-	app.Version = "1.0.5"
+	app.Version = versionString
 	app.HideHelp = true
 	app.Usage = fmt.Sprintf(
 		`Build Information Tool
