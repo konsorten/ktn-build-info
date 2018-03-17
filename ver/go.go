@@ -89,8 +89,6 @@ func getGoManifestXml(vi *VersionInformation) (string, error) {
 		`<?xml version="1.0" encoding="utf-8"?>
 <assembly manifestVersion="1.0" xmlns="urn:schemas-microsoft-com:asm.v1">
 
-	<assemblyIdentity version="{$.Version$}" name="{$.Name | encodeUrl$}"/>
-
 	<trustInfo xmlns="urn:schemas-microsoft-com:asm.v2">
 		<security>
 			<requestedPrivileges xmlns="urn:schemas-microsoft-com:asm.v3">
@@ -125,12 +123,5 @@ func getGoManifestXml(vi *VersionInformation) (string, error) {
 
 </assembly>`
 
-	// render template
-	res, err := RenderTemplate(manifest, "manifest", vi)
-
-	if err != nil {
-		return "", fmt.Errorf("Failed to render manifest template: %v", err)
-	}
-
-	return res, nil
+	return manifest, nil
 }
