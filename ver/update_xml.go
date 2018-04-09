@@ -6,7 +6,7 @@ import (
 	"strings"
 
 	log "github.com/Sirupsen/logrus"
-	xmldom "github.com/konsorten/go-xmldom"
+	xmldom "github.com/subchen/go-xmldom"
 )
 
 func isParamAction(input string, action string, param *string) bool {
