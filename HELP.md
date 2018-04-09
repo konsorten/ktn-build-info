@@ -20,7 +20,7 @@ USAGE:
    ktn-build-info.exe [global options] [arguments...]
 
 VERSION:
-   1.0.5.19
+   1.0.7.20
 
 AUTHOR:
    marvin + konsorten GmbH
