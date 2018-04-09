@@ -60,7 +60,7 @@ func RetrieveBuildFromConsul(consulUrl string, kvProjectRoot string, vi *Version
 	kv := client.KV()
 
 	// create session
-	session, _, err := client.Session().Create(nil, nil)
+	session, _, err := client.Session().Create(&api.SessionEntry{TTL: "60s"}, nil)
 
 	if err != nil {
 		return fmt.Errorf("Failed to create session: %v", err)
