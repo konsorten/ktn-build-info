@@ -25,22 +25,10 @@ func RetrieveBuildFromConsul(consulUrl string, kvProjectRoot string, vi *Version
 		return fmt.Errorf("Failed to parse consul URL: %v", err)
 	}
 
-	// determine port
-	port := cu.Port()
-
-	if port == "" {
-		switch cu.Scheme {
-		case "http":
-			port = "80"
-		case "https":
-			port = "443"
-		}
-	}
-
 	// assign config
 	cfg := api.DefaultConfig()
 
-	cfg.Address = fmt.Sprintf("%v:%v", cu.Host, port)
+	cfg.Address = cu.Host
 	cfg.Scheme = cu.Scheme
 	cfg.Datacenter = cu.Path[1:] // trim first slash
 
