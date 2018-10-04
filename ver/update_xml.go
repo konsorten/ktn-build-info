@@ -5,7 +5,7 @@ import (
 	"io/ioutil"
 	"strings"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	xmldom "github.com/subchen/go-xmldom"
 )
 

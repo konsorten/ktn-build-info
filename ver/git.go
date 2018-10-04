@@ -4,7 +4,7 @@ import (
 	"os/exec"
 	"syscall"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 func TryReadFromGit() (*VersionInformation, error) {

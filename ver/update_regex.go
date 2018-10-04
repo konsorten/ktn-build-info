@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"regexp"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 func UpdateRegexFile(filename string, matchMap UpdateActions, usePosix bool, vi *VersionInformation) error {

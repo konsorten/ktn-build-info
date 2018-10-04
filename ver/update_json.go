@@ -7,7 +7,7 @@ import (
 	"io/ioutil"
 
 	"github.com/Jeffail/gabs"
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 type UpdateActions map[string]string

@@ -8,7 +8,7 @@ import (
 	"runtime"
 	"time"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 	"github.com/josephspurrier/goversioninfo"
 )
 

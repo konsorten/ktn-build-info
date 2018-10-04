@@ -4,7 +4,7 @@ import (
 	"os"
 	"strconv"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 func TryReadFromEnvironmentVariables(varMap map[string]string) (*VersionInformation, error) {

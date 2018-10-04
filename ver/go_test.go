@@ -5,7 +5,7 @@ import (
 	"runtime"
 	"testing"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 func TestWriteGoSysoFiles(t *testing.T) {

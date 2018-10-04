@@ -4,7 +4,7 @@ import (
 	"os"
 	"path/filepath"
 
-	log "github.com/Sirupsen/logrus"
+	log "github.com/sirupsen/logrus"
 )
 
 func TryReadFromWorkingDirectory() (*VersionInformation, error) {
