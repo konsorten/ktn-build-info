@@ -130,8 +130,6 @@ func main() {
 
 func run(c *cli.Context) error {
 	// enable debug output
-	initTerminal()
-
 	if c.Bool("debug") {
 		log.SetLevel(log.DebugLevel)
 	}

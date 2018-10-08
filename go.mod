@@ -1,7 +1,5 @@
 module github.com/konsorten/ktn-build-info
 
-replace github.com/subchen/go-xmldom => github.com/konsorten/go-xmldom v1.1.2
-
 require (
 	github.com/DataDog/datadog-go v0.0.0-20180822151419-281ae9f2d895 // indirect
 	github.com/Jeffail/gabs v1.1.0
@@ -30,20 +28,23 @@ require (
 	github.com/miekg/dns v1.0.12 // indirect
 	github.com/mitchellh/go-homedir v1.0.0 // indirect
 	github.com/mitchellh/go-testing-interface v1.0.0 // indirect
-	github.com/mitchellh/mapstructure v1.1.1 // indirect
+	github.com/mitchellh/mapstructure v1.1.2 // indirect
 	github.com/pascaldekloe/goe v0.0.0-20180627143212-57f6aae5913c // indirect
 	github.com/pkg/errors v0.8.0 // indirect
 	github.com/prometheus/client_golang v0.8.0 // indirect
 	github.com/prometheus/client_model v0.0.0-20180712105110-5c3871d89910 // indirect
 	github.com/prometheus/common v0.0.0-20180801064454-c7de2306084e // indirect
-	github.com/prometheus/procfs v0.0.0-20181004131639-6bfc2c70c4ee // indirect
+	github.com/prometheus/procfs v0.0.0-20181005140218-185b4288413d // indirect
 	github.com/sean-/seed v0.0.0-20170313163322-e2103e2c3529 // indirect
 	github.com/sirupsen/logrus v1.1.0
-	github.com/subchen/go-xmldom v1.1.1
+	github.com/subchen/go-xmldom v1.1.2
 	github.com/tv42/httpunix v0.0.0-20150427012821-b75d8614f926 // indirect
-	golang.org/x/net v0.0.0-20181004194319-68fc911561ed // indirect
+	golang.org/x/crypto v0.0.0-20181001203147-e3636079e1a4 // indirect
+	golang.org/x/net v0.0.0-20181005035420-146acd28ed58 // indirect
 	golang.org/x/sync v0.0.0-20180314180146-1d60e4601c6f // indirect
+	golang.org/x/sys v0.0.0-20181005133103-4497e2df6f9e // indirect
 	google.golang.org/appengine v1.2.0 // indirect
+	gopkg.in/check.v1 v1.0.0-20180628173108-788fd7840127 // indirect
 	gopkg.in/vmihailenco/msgpack.v2 v2.9.1 // indirect
 	gopkg.in/yaml.v2 v2.2.1
 )
